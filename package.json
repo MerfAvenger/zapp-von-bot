@@ -1,6 +1,6 @@
 {
   "name": "zapp-von-bot",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Bloody Barons Server Bot",
   "main": "index.js",
   "dependencies": {
