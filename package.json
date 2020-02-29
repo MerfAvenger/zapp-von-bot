@@ -1,0 +1,27 @@
+{
+  "name": "zapp-von-bot",
+  "version": "0.1.0",
+  "description": "Bloody Barons Server Bot",
+  "main": "index.js",
+  "dependencies": {
+    "babel-preset-env": "^1.7.0",
+    "babel-register": "^6.26.0",
+    "discord.js": "^11.6.0",
+    "uws": "^100.0.1",
+    "winston": "^3.2.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MerfAvenger/zapp-von-bot.git"
+  },
+  "author": "connor.barthelmie",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MerfAvenger/zapp-von-bot/issues"
+  },
+  "homepage": "https://github.com/MerfAvenger/zapp-von-bot#readme"
+}
