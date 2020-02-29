@@ -4,11 +4,8 @@
   "description": "Bloody Barons Server Bot",
   "main": "index.js",
   "dependencies": {
-    "babel-preset-env": "^1.7.0",
-    "babel-register": "^6.26.0",
     "discord.js": "^11.6.0",
-    "uws": "^100.0.1",
-    "winston": "^3.2.1"
+    "uws": "^100.0.1"
   },
   "devDependencies": {},
   "scripts": {
