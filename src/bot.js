@@ -3,6 +3,7 @@ const client = new Discord.Client();
 
 //Internal libraries
 const commandParse = require('./util/CommandParse.js');
+const auth = require('./util/Auth.js')
 
 //Config & secrets
 const config = require('../config.js')
@@ -22,29 +23,6 @@ client.on('warning', (e) => {
 client.on('error', (e) => {
     console.error('ERROR: ' + e.msg);
 })
-
-auth = (msg) =>  {
-    let authResult = false;
-
-    config.whitelist.roles.forEach((role) => {
-        if(msg.guild.roles.find("name", role)){
-            authResult = true;
-        }
-    });
-
-    config.whitelist.users.forEach((user) => {
-
-        if( msg.author.tag === user){
-            authResult = true;
-        }
-    });
-
-    if(authResult) {
-        return true;
-    }
-
-    return false;
-}
 
 client.on('message', (msg) => {
 
