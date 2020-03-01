@@ -2,15 +2,14 @@ const Discord = require('discord.js');
 const client = new Discord.Client();
 
 //Internal libraries
-const commandParse = require('./util/CommandParse.js');
+const commandParse = require('./input/CommandParse.js');
+const execute = require('./input/CommandExecutor.js')
 const auth = require('./util/Auth.js')
 
 //Config & secrets
-const config = require('../config.js')
 const TOKEN = require('../secret/TOKEN.json');
 
 console.log('Loading bot');
-console.log('Whitelisted users: ' + config.whitelist.users);
 
 client.on('ready', () => {
     console.log(`Loggined in with client id: ${client.user.tag}`)
@@ -41,9 +40,7 @@ client.on('message', (msg) => {
         try {
             let commandParams = commandParse(userMsg);
 
-            Array.from(commandParams).forEach((cmd) => {
-                msg.reply('Recognised > command segment: ' + cmd);
-            });
+            execute(commandParams);
         } catch(e) {
             msg.reply('Encountered error: ' + e + '\n\n Command parse = ' + commandParse.toString());
         }

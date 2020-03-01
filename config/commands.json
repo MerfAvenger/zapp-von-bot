@@ -1,0 +1,47 @@
+{
+    "roles": {
+        "command": "roles",
+        "options": {
+            "add": {
+                "command": "add",
+                "requiredRoles": [
+                    "admin"
+                ],
+                "assignableRoles": [
+                    "guest",
+                    "ensign",
+                    "lieutenant",
+                    "major"
+                ]
+            },
+            "remove": {
+                "command": "remove",
+                "removableRoles" : [
+                    "guest",
+                    "ensign",
+                    "lieutenant",
+                    "major"
+                ]
+            }
+        }
+    },    
+    "info": {
+        "command": "info",
+        "options": {
+            "rules": {
+                "command": "rules"
+            }
+        }
+    },
+    "pss": {
+        "command": "pss",
+        "options": {
+            "player": {
+                "command": "player"
+            },
+            "fleet": {
+                "command": "fleet"
+            }
+        }
+    }
+}

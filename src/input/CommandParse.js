@@ -5,11 +5,11 @@ const parse = function (command) {
 
     Array.from(command).forEach((char) => {
         if (char === ' ' && charAcc.length > 0) {
-            commandAcc.push(charAcc);
+            commandAcc.push(charAcc.toLowerCase());
             charAcc = '';
         } else if (counter === (command.length - 1)) {
             charAcc += char;
-            commandAcc.push(charAcc);
+            commandAcc.push(charAcc.toLowerCase());
             charAcc = '';
         } else {
             charAcc += char;
