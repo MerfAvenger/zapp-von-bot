@@ -4,13 +4,7 @@ const fs = require('fs');
 const commandConfig = require("../../config/commands.json");
 
 const run = function(commandArray, client, message) {
-    if(!isValidCommand(commandArray[0])) {
-        throw Error('Bot received invalid command: ' + commandArray[0].toString());
-    }
-
-    if(!isValidOption(commandArray[0], commandArray[1])) {
-        throw Error('Bot received invalid parameter: ' + commandArray[1].toString());
-    }
+    isValid(commandArray);
 
     const params = [];
 
@@ -20,13 +14,21 @@ const run = function(commandArray, client, message) {
 
     const commandFn = load(commandArray[0], commandArray[1]);
 
-    console.log('Calling\n ' + commandFn);
-
     if(commandConfig[commandArray[0]].options[commandArray[1]].discord) {
         console.log(message);
         callCommandWith(commandFn, params, client, message);
     } else {
         callCommandWith(commandFn, params);
+    }
+}
+
+const isValid = function(commandArray) {
+    if(!isValidCommand(commandArray[0])) {
+        throw Error('Bot received invalid command: ' + commandArray[0].toString());
+    }
+
+    if(!isValidOption(commandArray[0], commandArray[1])) {
+        throw Error('Bot received invalid parameter: ' + commandArray[1].toString());
     }
 }
 

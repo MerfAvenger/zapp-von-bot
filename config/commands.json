@@ -18,7 +18,7 @@
             "remove": {
                 "command": "remove",
                 "discord": true,
-                "removableRoles" : [
+                "removableRoles": [
                     "guest",
                     "ensign",
                     "lieutenant",
@@ -29,6 +29,7 @@
     },    
     "info": {
         "command": "info",
+        "discord": true,
         "options": {
             "rules": {
                 "command": "rules"
@@ -37,12 +38,22 @@
     },
     "pss": {
         "command": "pss",
+        "discord": true,
         "options": {
             "player": {
                 "command": "player"
             },
             "fleet": {
                 "command": "fleet"
+            }
+        }
+    },
+    "games": {
+        "command": "play",
+        "discord": true,
+        "options": {
+            "pokemon": {
+                "command": "pokemon"
             }
         }
     }
