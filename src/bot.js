@@ -16,7 +16,7 @@ client.on('ready', () => {
 });
 
 client.on('warning', (e) => {
-    console.error('WARNING: ' + e.msg);
+    console.warn('WARNING: ' + e.msg);
 })
 
 client.on('error', (e) => {
@@ -38,11 +38,9 @@ client.on('message', (msg) => {
         userMsg = userMsg.slice(1, msg.content.length);
 
         try {
-            let commandParams = commandParse(userMsg);
-
-            execute(commandParams);
+            execute(commandParse(userMsg));
         } catch(e) {
-            msg.reply('Encountered error: ' + e + '\n\n Command parse = ' + commandParse.toString());
+            msg.reply('Encountered error: ' + e);
         }
     } else {
         //Specific commands
