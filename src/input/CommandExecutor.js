@@ -3,7 +3,7 @@ const fs = require('fs');
 //Command structure/parameter config
 const commandConfig = require("../../config/commands.json");
 
-const run = function(commandArray) {
+const run = function(commandArray, client, message) {
     if(!isValidCommand(commandArray[0])) {
         throw Error('Bot received invalid command: ' + commandArray[0].toString());
     }
@@ -21,11 +21,21 @@ const run = function(commandArray) {
     const commandFn = load(commandArray[0], commandArray[1]);
 
     console.log('Calling\n ' + commandFn);
-    callCommandWith(commandFn, params);
+
+    if(commandConfig[commandArray[0]].options[commandArray[1]].discord) {
+        console.log(message);
+        callCommandWith(commandFn, params, client, message);
+    } else {
+        callCommandWith(commandFn, params);
+    }
 }
 
-const callCommandWith = function(commandFn, params) {
-    commandFn(params);
+const callCommandWith = function(commandFn, params, client = null, message = null) {
+    if(client) {
+        commandFn(client, message, params);
+    } else {
+        commandFn(params);
+    }
 }
 
 const isValidCommand = function(command) {
@@ -57,7 +67,5 @@ const load = function(command, option) {
 
     return rtnFn;
 }
-
-
 
 module.exports = run;

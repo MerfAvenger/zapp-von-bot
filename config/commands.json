@@ -4,6 +4,7 @@
         "options": {
             "add": {
                 "command": "add",
+                "discord": true,
                 "requiredRoles": [
                     "admin"
                 ],
@@ -16,6 +17,7 @@
             },
             "remove": {
                 "command": "remove",
+                "discord": true,
                 "removableRoles" : [
                     "guest",
                     "ensign",

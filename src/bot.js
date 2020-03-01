@@ -38,7 +38,7 @@ client.on('message', (msg) => {
         userMsg = userMsg.slice(1, msg.content.length);
 
         try {
-            execute(commandParse(userMsg));
+            execute(commandParse(userMsg), client, msg);
         } catch(e) {
             msg.reply('Encountered error: ' + e);
         }
