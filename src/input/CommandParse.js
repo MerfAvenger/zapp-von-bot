@@ -5,11 +5,25 @@ const parse = function (command) {
 
     Array.from(command).forEach((char) => {
         if (char === ' ' && charAcc.length > 0) {
-            commandAcc.push(charAcc.toLowerCase());
+            
+            if(commandAcc.length < 1) {
+                commandAcc.push(charAcc.toLowerCase());
+            } else {
+                commandAcc.push(charAcc);
+            }
+
             charAcc = '';
         } else if (counter === (command.length - 1)) {
             charAcc += char;
-            commandAcc.push(charAcc.toLowerCase());
+
+            //If this is the first two sections of the command we dont care about case
+            //For parameters we care about casing as they are names and roles
+            if(commandAcc.length < 1) {
+                commandAcc.push(charAcc.toLowerCase());
+            } else {
+                commandAcc.push(charAcc);
+            }
+
             charAcc = '';
         } else {
             charAcc += char;

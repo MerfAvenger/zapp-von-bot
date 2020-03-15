@@ -5,6 +5,8 @@ const rankOrder = [
     "lieutenant",
     "major",
     "commander",
+    "senator",
+    "vice-admiral",
     
 ]
 

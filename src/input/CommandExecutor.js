@@ -15,7 +15,6 @@ const run = function(commandArray, client, message) {
     const commandFn = load(commandArray[0], commandArray[1]);
 
     if(commandConfig[commandArray[0]].options[commandArray[1]].discord) {
-        console.log(message);
         callCommandWith(commandFn, params, client, message);
     } else {
         callCommandWith(commandFn, params);
