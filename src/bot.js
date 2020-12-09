@@ -3,8 +3,8 @@ const client = new Discord.Client();
 
 //Internal libraries
 const commandParse = require('./input/CommandParse.js');
-const execute = require('./input/CommandExecutor.js')
 const auth = require('./util/Auth.js')
+const commands = require('../command/index.js');
 
 //Config & secrets
 const TOKEN = require('../secret/TOKEN.json');
@@ -28,7 +28,7 @@ client.on('message', (msg) => {
     const authResult = auth(msg);
 
     if(!authResult) {
-        console.log(authResult);
+        console.log({authResult});
         return;
     }
 
@@ -37,19 +37,14 @@ client.on('message', (msg) => {
         let userMsg = msg.content;
         userMsg = userMsg.slice(1, msg.content.length);
 
-        try {
-            execute(commandParse(userMsg), client, msg);
-        } catch(e) {
-            msg.reply('Encountered error: ' + e);
-        }
-    } else {
-        //Specific commands
-        switch(msg.content) {
-            case 'ping':
-                msg.reply('pong');
-        }
-    }
+        const requestedCommand = commandParse(userMsg);
+        const commandToExecute = commands[requestedCommand.category][requestedCommand.command];
 
+        commandToExecute(requestedCommand.params);
+
+        console.log({requestedCommand});  
+        console.log({commandToExecute});      
+    } 
 });
 
 client.login(TOKEN.token);

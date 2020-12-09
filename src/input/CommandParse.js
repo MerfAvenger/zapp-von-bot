@@ -1,38 +1,22 @@
-const parse = function (command) {
-    let commandAcc = [];
-    let charAcc = '';
-    let counter = 0;
+const parse = function ( userMessage ) {
+    const trimmedMessage = userMessage.trim();
+    const messageSegments = trimmedMessage.split(' ');
 
-    Array.from(command).forEach((char) => {
-        if (char === ' ' && charAcc.length > 0) {
-            
-            if(commandAcc.length < 1) {
-                commandAcc.push(charAcc.toLowerCase());
-            } else {
-                commandAcc.push(charAcc);
-            }
+    const category = messageSegments[0];
+    const command = messageSegments[1];
+    const params = [];
 
-            charAcc = '';
-        } else if (counter === (command.length - 1)) {
-            charAcc += char;
+    const numSegments = messageSegments.length;
 
-            //If this is the first two sections of the command we dont care about case
-            //For parameters we care about casing as they are names and roles
-            if(commandAcc.length < 1) {
-                commandAcc.push(charAcc.toLowerCase());
-            } else {
-                commandAcc.push(charAcc);
-            }
+    for ( let i = 2; i < numSegments; i++ ) {
+        params.push( messageSegments[i] );
+    }
 
-            charAcc = '';
-        } else {
-            charAcc += char;
-        }
-
-        counter++;
-    })
-
-    return commandAcc;
+    return {
+        category,
+        command,
+        params
+    }
 }
 
 module.exports = parse;

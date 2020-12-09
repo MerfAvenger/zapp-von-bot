@@ -18,6 +18,9 @@
             "remove": {
                 "command": "remove",
                 "discord": true,
+                "requiredRoles": [
+                    "admin"
+                ],
                 "removableRoles": [
                     "guest",
                     "ensign",
@@ -45,15 +48,6 @@
             },
             "fleet": {
                 "command": "fleet"
-            }
-        }
-    },
-    "games": {
-        "command": "play",
-        "discord": true,
-        "options": {
-            "pokemon": {
-                "command": "pokemon"
             }
         }
     }

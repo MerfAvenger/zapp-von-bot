@@ -1,29 +1,22 @@
 const config = require('../../config/config.js')
 
 const auth = function( msg ) {
-    let authResult = false;
+    const author = msg.author.tag;
 
-    if(isBlacklistedUser(msg)) {
+    if(isBlacklistedUser( author )) {
         return false;
     }
 
-    if(hasWhitelistedRole(msg)) {
-        authResult = true;
+    if(hasWhitelistedRole( msg ) || isWhitelistedUser( author )) {
+        return true;
     }
-
-    if(isWhitelistedUser(msg)) {
-        authResult = true;
-    }
-
-    return authResult;
 }
 
-const isBlacklistedUser = function(msg) {
-    let authResult = false;
+const isBlacklistedUser = function( author ) {
+    let authResult;
 
-    config.blacklist.users.forEach((user) => {
-
-        if( msg.author.tag === user){
+    config.blacklist.users.forEach( ( user ) => {
+        if( author === user ){
             authResult = true;
         }
     });
@@ -31,12 +24,11 @@ const isBlacklistedUser = function(msg) {
     return authResult
 }
 
-const isWhitelistedUser = function(msg) {
+const isWhitelistedUser = function( author ) {
     let authResult = false;
 
-    config.whitelist.users.forEach((user) => {
-
-        if( msg.author.tag === user){
+    config.whitelist.users.forEach( ( user ) => {
+        if( author === user){
             authResult = true;
         }
     });
@@ -44,7 +36,7 @@ const isWhitelistedUser = function(msg) {
     return authResult
 }
 
-const hasWhitelistedRole = function(msg) {
+const hasWhitelistedRole = function( msg ) {
     let authResult = false;
 
     config.whitelist.roles.forEach((role) => {
