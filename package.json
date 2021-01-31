@@ -4,8 +4,8 @@
   "description": "Bloody Barons Server Bot",
   "main": "index.js",
   "dependencies": {
-    "discord.js": "^11.6.0",
-    "uws": "^100.0.1"
+    "discord.js": "^12.5.1",
+    "uws": "^200.0.0"
   },
   "devDependencies": {},
   "scripts": {

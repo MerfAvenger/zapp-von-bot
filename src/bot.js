@@ -2,9 +2,12 @@ const Discord = require('discord.js');
 const client = new Discord.Client();
 
 //Internal libraries
-const commandParse = require('./input/CommandParse.js');
-const auth = require('./util/Auth.js')
-const commands = require('../command/index.js');
+const auth = require('./util/Auth.js');
+
+const CommandManager = require('./input/CommandManager');
+const commands = require('./command');
+
+const commandManager = new CommandManager(client, commands);
 
 //Config & secrets
 const TOKEN = require('../secret/TOKEN.json');
@@ -12,7 +15,7 @@ const TOKEN = require('../secret/TOKEN.json');
 console.log('Loading bot');
 
 client.on('ready', () => {
-    console.log(`Loggined in with client id: ${client.user.tag}`)
+    console.log(`Loggined in with client id: ${client.user.tag}`);
 });
 
 client.on('warning', (e) => {
@@ -25,25 +28,21 @@ client.on('error', (e) => {
 
 client.on('message', (msg) => {
 
-    const authResult = auth(msg);
+    // const authResult = auth(msg);
 
-    if(!authResult) {
-        console.log({authResult});
-        return;
-    }
+    // if(!authResult) {
+    //     console.log({authResult});
+    //     return;
+    // }
 
     //Detect bot command activation
     if(msg.content[0] ==='>'){
-        let userMsg = msg.content;
-        userMsg = userMsg.slice(1, msg.content.length);
-
-        const requestedCommand = commandParse(userMsg);
-        const commandToExecute = commands[requestedCommand.category][requestedCommand.command];
-
-        commandToExecute(requestedCommand.params);
-
-        console.log({requestedCommand});  
-        console.log({commandToExecute});      
+        try {
+            commandManager.executeCommand( msg );
+        } catch ( e ) {
+            let errorMessage = "I failed to execute command...\n\t" + e;
+            msg.reply( errorMessage );
+        }
     } 
 });
 

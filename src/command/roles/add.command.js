@@ -4,6 +4,10 @@ module.exports = function(client, message, params) {
         targetRoleAsString
     ] = params;
 
+    if ( !targetUserId || !targetRoleAsString ) {
+        throw new Error('Add command missing paramaters - given ' + {targetUserId} + {targetRoleAsString});
+    }
+
     const targetUser = getTargetUser(targetUserId, message, client);
     const targetRole = getTargetRoleAsObject(targetRoleAsString, message);
 
@@ -18,7 +22,7 @@ const getTargetRoleAsObject = function(roleAsString, message) {
     });
 
     if(!targetRole) {
-        throw new Error(`Role '${role}' was not found.`)
+        throw new Error(`Role '${roleAsString}' was not found.`)
     }
 
     return targetRole;
