@@ -1,4 +1,4 @@
-//Read user input and assemble a command object to hold each section of the user's request
+//Read user input and assemble an object to hold each section of the user's request
 const parse = function ( userMessage ) {
     const trimmedMessage = userMessage.trim();
     const messageSegments = trimmedMessage.split( ' ' );
@@ -14,6 +14,7 @@ const parse = function ( userMessage ) {
     }
 }
 
+//Seperate parameters with minor processing to assemble quoted sections into a single parameter
 const parseParameters = function ( messageSegments ) {
     const parameters = [];
     const numSegments = messageSegments.length;

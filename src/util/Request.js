@@ -1,8 +1,10 @@
 const https = require("https");
 
 const get = function(url, callback) {
+    console.log(`Making HTTP GET request to: ${url}`);
+
     const request = https.get(url, (response) => {
-        console.log('HTTP Response: ', response.statusCode);
+        console.log('HTTP GET Response: ', response.statusCode);
         console.log('Headers: ', response.headers);
 
         response.setEncoding('utf-8');

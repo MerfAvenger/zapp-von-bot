@@ -1,3 +1,4 @@
+//Create a JSON which has all of our commands stored on it and export it
 const commands          = {};
 
 commands.pss            = {};

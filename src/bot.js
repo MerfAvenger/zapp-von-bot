@@ -4,7 +4,7 @@ const client = new Discord.Client();
 //Internal libraries
 const auth = require('./util/Auth.js');
 
-const CommandManager = require('./input/CommandManager');
+const CommandManager = require('./command/CommandManager');
 const commands = require('./command');
 
 const commandManager = new CommandManager(client, commands);
