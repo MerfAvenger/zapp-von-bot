@@ -1,8 +1,0 @@
-{
-    "API_BASE_URL"          : "https://api.pixelstarships.com",
-
-    "USER_URI"              : "/UserService/SearchUsers?searchString=",
-    
-    "ALLIANCE_SEARCH_URI"   : "/AllianceService/SearchAlliances?accessToken=",    
-    "ALLIANCE_PAGINATION_URI": "&skip=0&take=100&name="
-}
