@@ -1,0 +1,10 @@
+services:
+  savy-api:
+    build:
+      context: ./savy-api
+      dockerfile: Dockerfile
+    env_file:
+      - ./savy-api/.env
+    ports:
+      # This needs to line up with PORT in the savy-api .env file
+      - 3000:3000

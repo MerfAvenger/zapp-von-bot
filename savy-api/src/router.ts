@@ -12,4 +12,10 @@ Routes.forEach((route) => {
   router[method.toLowerCase()](path, handler);
 });
 
+router.use((req, res, next) => {
+  res
+    .status(404)
+    .json({ error: "Could not find route [" + req.method + "] " + req.path });
+});
+
 export default router;
