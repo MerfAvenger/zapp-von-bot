@@ -7,4 +7,27 @@ services:
       - ./savy-api/.env
     ports:
       # This needs to line up with PORT in the savy-api .env file
-      - 3000:3000
+      - 8080:8080
+  database:
+    build:
+      context: ./database
+      dockerfile: Dockerfile
+    restart: always
+    shm_size: 128mb
+    user: ${POSTGRES_UID}:${POSTGRES_GID}
+    env_file:
+      - .env
+    ports:
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+    volumes:
+      - pg-data:${PGDATA}
+  adminer:
+    image: adminer
+    environment:
+      - ADMINER_DEFAULT_SERVER=database
+    restart: always
+    ports:
+      - 8082:8080
+
+volumes:
+  pg-data:
