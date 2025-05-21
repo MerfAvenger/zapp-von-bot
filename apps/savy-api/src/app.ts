@@ -22,6 +22,11 @@ app.on("uncaughtException", (err) => {
 });
 
 app.on("SIGINT", () => {
-  console.log("Server shutting down...");
+  console.log("[SIGINT] Server shutting down...");
+  process.exit(0);
+});
+
+app.on("SIGTERM", () => {
+  console.log("[SIGTERM] Server shutting down...");
   process.exit(0);
 });

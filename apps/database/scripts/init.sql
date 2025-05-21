@@ -1,7 +1,7 @@
 CREATE TABLE devices (
     id SERIAL PRIMARY KEY UNIQUE NOT NULL,
     device_key TEXT NOT NULL,
-    access_token TEXT NOT NULL,
+    access_token TEXT DEFAULT NULL,
     last_login TEXT DEFAULT NULL
 );
 

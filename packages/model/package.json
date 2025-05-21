@@ -1,0 +1,18 @@
+{
+  "name": "model",
+  "version": "1.0.0",
+  "description": "",
+  "types": "./types/index.d.ts",
+  "keywords": [],
+  "private": true,
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.8.0",
+  "scripts": {
+    "build": "tsc",
+    "prepare": "tsc"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3"
+  }
+}

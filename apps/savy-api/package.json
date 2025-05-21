@@ -15,16 +15,20 @@
   "author": "",
   "license": "ISC",
   "packageManager": "pnpm@10.8.0",
+  "linkWorkspacePackages": true,
   "dependencies": {
-    "@types/express": "^5.0.1",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
+    "pg": "^8.14.1",
     "validator": "^13.15.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.24.0",
+    "@types/express": "^5.0.1",
     "@types/node": "^22.14.0",
+    "@types/pg": "^8.11.13",
     "eslint": "^9.24.0",
+    "model": "workspace:^",
     "prettier": "^3.5.3",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.29.1"
