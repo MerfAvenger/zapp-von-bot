@@ -1,6 +1,7 @@
 import { Router } from "express";
 
 import Routes from "./routes";
+import Logger from "./logger/Logger";
 
 const router = Router();
 
@@ -8,7 +9,7 @@ const router = Router();
 Routes.forEach((route) => {
   const { method, path, handler } = route;
 
-  console.log(`Registering route: ${method} ${path}`);
+  Logger.log(`Registering route: ${method} ${path}`);
   router[method.toLowerCase()](path, handler);
 });
 
