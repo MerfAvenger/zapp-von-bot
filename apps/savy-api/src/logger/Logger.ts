@@ -14,65 +14,88 @@ export default class Logger {
         typeof arg === "boolean"
       ) {
         stringifiable.push(arg);
-      } else if (typeof arg === "object" && arg !== null) {
-        objectifiable.push(arg);
       } else if (arg instanceof Error) {
         errorifiable.push(arg);
+      } else if (typeof arg === "object") {
+        objectifiable.push(arg);
       }
     }
 
     return { stringifiable, objectifiable, errorifiable };
   }
 
-  public static log(systemName: string, ...args: unknown[]): void {
+  static #createTag(
+    name: string,
+    category: string,
+    showTimestamp = true
+  ): string {
+    return `[${category}|${name}${showTimestamp ? `|${new Date().toISOString()}` : ""}]`;
+  }
+
+  public static log(
+    systemName: string,
+    message: string,
+    ...args: unknown[]
+  ): void {
+    const tag = this.#createTag(systemName, "LOG");
     const { stringifiable, objectifiable, errorifiable } =
       this.#parseArgs(args);
-    console.log(`[${systemName}]`, ...stringifiable);
+    console.log(`${tag}`, message, ...stringifiable);
 
     if (objectifiable.length > 0) {
-      inspect({ category: "LOG", system: `${systemName}`, objectifiable });
+      console.log(tag, inspect(objectifiable));
     }
 
     if (errorifiable.length > 0) {
       for (const error of errorifiable) {
         if (error) {
-          console.error(`[${systemName}]`, error);
+          console.error(`${tag}`, error);
         }
       }
     }
   }
 
-  public static warn(systemName: string, ...args: unknown[]): void {
+  public static warn(
+    systemName: string,
+    message: string,
+    ...args: unknown[]
+  ): void {
+    const tag = this.#createTag(systemName, "WARN");
     const { stringifiable, objectifiable, errorifiable } =
       this.#parseArgs(args);
-    console.warn(`[${systemName}]`, ...stringifiable);
+    console.warn(`${tag}`, message, ...stringifiable);
 
     if (objectifiable.length > 0) {
-      inspect({ category: "WARN", system: `${systemName}`, objectifiable });
+      console.warn(tag, inspect(objectifiable));
     }
 
     if (errorifiable.length > 0) {
       for (const error of errorifiable) {
         if (error) {
-          console.error(`[${systemName}]`, error);
+          console.error(`${tag}`, error);
         }
       }
     }
   }
 
-  public static error(systemName: string, ...args: unknown[]): void {
+  public static error(
+    systemName: string,
+    message: string,
+    ...args: unknown[]
+  ): void {
+    const tag = this.#createTag(systemName, "ERROR");
     const { stringifiable, objectifiable, errorifiable } =
       this.#parseArgs(args);
-    console.error(`[${systemName}]`, ...stringifiable);
+    console.error(`${tag}`, message, ...stringifiable);
 
     if (objectifiable.length > 0) {
-      inspect({ category: "ERROR", system: `${systemName}`, objectifiable });
+      console.error(tag, inspect(objectifiable));
     }
 
     if (errorifiable.length > 0) {
       for (const error of errorifiable) {
         if (error) {
-          console.error(`[${systemName}]`, error);
+          console.error(`${tag}`, error);
         }
       }
     }
