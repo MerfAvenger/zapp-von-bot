@@ -8,6 +8,7 @@ WORKDIR /
 RUN corepack prepare pnpm@latest --activate
 RUN corepack enable pnpm
 
+
 FROM prepare AS builder
 
 # Use the monorepo application directory.
@@ -19,6 +20,7 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 RUN pnpm -r build
 
 RUN pnpm deploy --filter=savy-api --prod /apps/savy-api
+
 
 FROM base AS savy-api
 
