@@ -13,7 +13,10 @@ const poolConfig: PoolConfig = {
   connectionTimeoutMillis: config.database.connectionTimeoutMillis,
 };
 
+const SYSTEM_NAME = "Pool";
+
 Logger.log(
+  SYSTEM_NAME,
   "Creating database connection pool with the following config:",
   poolConfig
 );
@@ -21,7 +24,7 @@ Logger.log(
 // We want to reuse the same pool instance across the service, so we export it as an instance as a pseudo-singleton.
 const pool = new Pool(poolConfig);
 pool.on("error", (err) => {
-  Logger.error("Unexpected error on idle client", err);
+  Logger.error(SYSTEM_NAME, "Unexpected error on idle client", err);
   process.exit(-1);
 });
 

@@ -5,11 +5,13 @@ import Logger from "./logger/Logger";
 
 const router = Router();
 
+const SYSTEM_NAME = "Router";
+
 // Iterate through exported routes and register them with the router
 Routes.forEach((route) => {
   const { method, path, handler } = route;
 
-  Logger.log(`Registering route: ${method} ${path}`);
+  Logger.log(SYSTEM_NAME, `Registering route: ${method} ${path}`);
   router[method.toLowerCase()](path, handler);
 });
 
