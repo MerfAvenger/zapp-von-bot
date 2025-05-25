@@ -1,0 +1,9 @@
+# Repository tools
+.git
+.gitignore
+
+# Deps
+node_modules
+
+# Build output
+dist

@@ -1,5 +1,5 @@
 {
-  "name": "savy-service",
+  "name": "savy-api",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -15,18 +15,22 @@
   "author": "",
   "license": "ISC",
   "packageManager": "pnpm@10.8.0",
-  "linkWorkspacePackages": true,
   "dependencies": {
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
+    "js-md5": "^0.8.3",
+    "moment": "^2.30.1",
     "pg": "^8.14.1",
-    "validator": "^13.15.0"
+    "validator": "^13.15.0",
+    "xmldom": "^0.6.0",
+    "xpath": "^0.0.34"
   },
   "devDependencies": {
     "@eslint/js": "^9.24.0",
     "@types/express": "^5.0.1",
     "@types/node": "^22.14.0",
     "@types/pg": "^8.11.13",
+    "@types/xmldom": "^0.1.34",
     "eslint": "^9.24.0",
     "model": "workspace:^",
     "prettier": "^3.5.3",

@@ -1,14 +1,21 @@
 services:
   savy-api:
+    image: zapp-von-bot/savy-api:latest
     build:
-      context: ./savy-api
-      dockerfile: Dockerfile
+      context: ./
+      dockerfile: Node.Dockerfile
+      target: savy-api
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
     env_file:
-      - ./savy-api/.env
+      - ./apps/savy-api/.env
     ports:
       # This needs to line up with PORT in the savy-api .env file
       - 8080:8080
   database:
+    image: zapp-von-bot/database:latest
     build:
       context: ./database
       dockerfile: Dockerfile

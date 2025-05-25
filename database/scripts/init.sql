@@ -5,9 +5,9 @@ CREATE TABLE devices (
     last_login TEXT DEFAULT NULL
 );
 
-CREATE TABLE users (
+CREATE TABLE accounts (
     id SERIAL PRIMARY KEY UNIQUE NOT NULL,
-    account TEXT NOT NULL,
+    name TEXT NOT NULL,
     email TEXT NOT NULL,
     password TEXT NOT NULL
 );
