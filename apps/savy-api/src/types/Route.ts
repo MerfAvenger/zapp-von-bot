@@ -1,3 +1,4 @@
+import { Handler } from "express";
 import Method from "./Method";
 
 /**
@@ -10,7 +11,7 @@ import Method from "./Method";
 interface Route {
   method: Method;
   path: string;
-  handler: (req: Request, res: Response) => void;
+  handler: Handler;
 }
 
 export default Route;

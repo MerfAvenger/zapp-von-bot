@@ -26,7 +26,7 @@ FROM base AS savy-api
 
 WORKDIR /apps/savy-api
 
-ARG PORT=3000
+ARG PORT=8080
 
 RUN addgroup nodegroup --system --gid 101
 RUN adduser nodeuser --ingroup nodegroup --system --uid 101
@@ -34,5 +34,7 @@ RUN adduser nodeuser --ingroup nodegroup --system --uid 101
 USER 101:101
 
 COPY --from=builder /apps/savy-api .
+
+EXPOSE ${PORT}
 
 CMD ["node", "dist/app.js"]

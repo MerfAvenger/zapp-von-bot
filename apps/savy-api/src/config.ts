@@ -26,6 +26,23 @@ if (!databaseUser || !databasePassword || !databaseName) {
   );
 }
 
+const savyIdleTimeout = parseInt(process.env.SAVY_IDLE_TIMEOUT_SECONDS) || 5;
+const savyChecksumKey = process.env.SAVY_CHECKSUM_KEY;
+
+const savyBaseUrl = process.env.SAVY_BASE_URL;
+
+if (!savyBaseUrl) {
+  throw new Error(
+    "Cannot initialise: There is no base URL for the Savy API in the environment variables."
+  );
+}
+
+if (!savyChecksumKey) {
+  throw new Error(
+    "Cannot initialise: There is no checksum key in the environment variables."
+  );
+}
+
 const config: ServerConfig = {
   port,
   database: {
@@ -37,6 +54,11 @@ const config: ServerConfig = {
     max: databaseMaxConnections,
     idleTimeoutMillis: databaseIdleTimeout,
     connectionTimeoutMillis: databaseConnectionTimeout,
+  },
+  savy: {
+    baseUrl: savyBaseUrl,
+    checksumKey: savyChecksumKey,
+    idleTimeout: savyIdleTimeout,
   },
 };
 
