@@ -1,12 +1,13 @@
 # Non-content files
-node_modules
+**/node_modules
 .DS_Store
 .idea
 .vscode
 
 # Build output
-dist
+**/dist
 
 # Secrets
 .env
-fixtures
+
+**/fixtures/*.json
