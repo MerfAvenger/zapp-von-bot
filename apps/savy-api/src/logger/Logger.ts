@@ -1,5 +1,6 @@
 import { inspect } from "util";
 import { LogArguments } from "../types/Logger";
+import moment from "moment";
 
 export default class Logger {
   static #parseArgs(args: unknown[]): LogArguments {
@@ -29,7 +30,7 @@ export default class Logger {
     category: string,
     showTimestamp = true
   ): string {
-    return `[${category}|${name}${showTimestamp ? `|${new Date().toISOString()}` : ""}]`;
+    return `[${category}|${name}${showTimestamp ? `|${moment.utc().format("DD-MM-YY|HH:mm:ss:SSS")}` : ""}]`;
   }
 
   public static log(
