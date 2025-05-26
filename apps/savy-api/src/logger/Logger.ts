@@ -100,4 +100,19 @@ export default class Logger {
       }
     }
   }
+
+  public static createWrapper(systemName: string): {
+    log: (message: string, ...args: unknown[]) => void;
+    warn: (message: string, ...args: unknown[]) => void;
+    error: (message: string, ...args: unknown[]) => void;
+  } {
+    return {
+      log: (message: string, ...args: unknown[]) =>
+        this.log(systemName, message, ...args),
+      warn: (message: string, ...args: unknown[]) =>
+        this.warn(systemName, message, ...args),
+      error: (message: string, ...args: unknown[]) =>
+        this.error(systemName, message, ...args),
+    };
+  }
 }

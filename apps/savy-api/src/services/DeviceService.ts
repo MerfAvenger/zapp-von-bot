@@ -15,9 +15,10 @@ import Logger from "../logger/Logger";
 import config from "../config";
 import moment from "moment";
 import { md5 } from "js-md5";
-const SYSTEM_NAME = "DeviceService";
 
 const DEVICE_LOGIN_PATH = "/UserService/DeviceLogin11";
+
+const logger = Logger.createWrapper("DeviceService");
 
 export default class DeviceService {
   static async getDevice(): Promise<Device | null> {
@@ -29,13 +30,13 @@ export default class DeviceService {
     );
 
     if (!devices || devices.length === 0) {
-      Logger.warn(SYSTEM_NAME, "No devices found.");
+      logger.warn("No devices found.");
       return null;
     }
 
     const device = devices[0];
 
-    Logger.log(SYSTEM_NAME, "Device found:", device);
+    logger.log("Device found:", device);
 
     return device;
   }
@@ -51,22 +52,22 @@ export default class DeviceService {
     );
 
     if (!createdDevice || createdDevice.length === 0) {
-      Logger.error(SYSTEM_NAME, "No device created.");
+      logger.error("No device created.");
       return null;
     }
 
     const device = createdDevice[0];
 
-    Logger.log(SYSTEM_NAME, "Device created:", device);
+    logger.log("Device created:", device);
     return device;
   }
 
   static async getActiveDevice(): Promise<Device> {
-    Logger.log(SYSTEM_NAME, "Retrieving active device.");
+    logger.log("Retrieving active device.");
     const device = await this.getDevice();
 
     if (!device) {
-      Logger.warn(SYSTEM_NAME, "No device found, creating a new one.");
+      logger.warn("No device found, creating a new one.");
       const newDevice = await this.createDevice();
 
       if (!newDevice) {
@@ -77,15 +78,15 @@ export default class DeviceService {
     }
 
     if (deviceAuthenticationHasExpired(device)) {
-      Logger.warn(SYSTEM_NAME, "Device authentication has expired.");
+      logger.warn("Device authentication has expired.");
       const authenticatedDevice = await this.authenticateDevice(device);
 
       if (!authenticatedDevice) {
-        Logger.error(SYSTEM_NAME, "Failed to authenticate device.");
+        logger.error("Failed to authenticate device.");
         throw new Error("Failed to authenticate device.");
       }
 
-      Logger.log(SYSTEM_NAME, "Device re-authenticated:", authenticatedDevice);
+      logger.log("Device re-authenticated:", authenticatedDevice);
       return authenticatedDevice;
     }
 
@@ -117,7 +118,7 @@ export default class DeviceService {
       method: "POST",
     }).then((res) => {
       if (!res.ok) {
-        Logger.error(SYSTEM_NAME, "Error in response:", res);
+        logger.error("Error in response:", res);
         throw new Error("Failed to authenticate device.");
       }
       return res.text();
@@ -133,7 +134,7 @@ export default class DeviceService {
 
     if (Array.isArray(errorMessage) && errorMessage.length > 0) {
       const error = errorMessage[0].nodeValue;
-      Logger.error(SYSTEM_NAME, "Error in response:", error);
+      logger.error("Error in response:", error);
       throw new Error("Failed to authenticate device.");
     }
 
@@ -146,11 +147,11 @@ export default class DeviceService {
 
     if (accessToken) {
       const token = accessToken[0].nodeValue;
-      Logger.log(SYSTEM_NAME, "Access token:", token);
+      logger.log("Access token:", token);
       device.access_token = token;
       device.last_login = params.clientDateTime;
     } else {
-      Logger.error(SYSTEM_NAME, "No access token found in response.");
+      logger.error("No access token found in response.");
       throw new Error("Failed to authenticate device.");
     }
 

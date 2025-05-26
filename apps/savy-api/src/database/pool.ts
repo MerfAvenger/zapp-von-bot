@@ -2,6 +2,8 @@ import { Pool, PoolConfig } from "pg";
 import config from "../config";
 import Logger from "../logger/Logger";
 
+const logger = Logger.createWrapper("DatabasePool");
+
 const poolConfig: PoolConfig = {
   host: config.database.host,
   database: config.database.database,
@@ -13,10 +15,7 @@ const poolConfig: PoolConfig = {
   connectionTimeoutMillis: config.database.connectionTimeoutMillis,
 };
 
-const SYSTEM_NAME = "Pool";
-
-Logger.log(
-  SYSTEM_NAME,
+logger.log(
   "Creating database connection pool with the following config:",
   poolConfig
 );
@@ -24,7 +23,7 @@ Logger.log(
 // We want to reuse the same pool instance across the service, so we export it as an instance as a pseudo-singleton.
 const pool = new Pool(poolConfig);
 pool.on("error", (err) => {
-  Logger.error(SYSTEM_NAME, "Unexpected error on idle client", err);
+  logger.error("Unexpected error on idle client", err);
   process.exit(-1);
 });
 

@@ -4,7 +4,6 @@ import { assertIsValidServerConfig } from "./utils/validation/server-config";
 import "dotenv/config";
 
 const port = parseInt(process.env.SERVER_PORT) || 3000;
-const appDirectory = process.env.APP_DIRECTORY || "client";
 
 const databaseHost = process.env.SERVER_DATABASE_HOST || "database";
 const databasePort = parseInt(process.env.POSTGRES_PORT) || 5432;
