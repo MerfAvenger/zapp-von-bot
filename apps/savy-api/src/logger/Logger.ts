@@ -25,6 +25,14 @@ export default class Logger {
     return { stringifiable, objectifiable, errorifiable };
   }
 
+  /**
+   * Creates a formatted tag for log messages.
+   *
+   * @param name The name of the system or module.
+   * @param category The category of the log message (e.g., "LOG", "WARN", "ERROR").
+   * @param showTimestamp Whether to include a timestamp in the tag.
+   * @returns A formatted tag string.
+   */
   static #createTag(
     name: string,
     category: string,
@@ -102,6 +110,12 @@ export default class Logger {
     }
   }
 
+  /**
+   * Creates a logging wrapper to make using the logger with metadata easier.
+   *
+   * @param systemName The name of the system or module for which the logger is being created.
+   * @returns A wrapper object with `log`, `warn`, and `error` methods that automatically include the system name in the log messages.
+   */
   public static createWrapper(systemName: string): {
     log: (message: string, ...args: unknown[]) => void;
     warn: (message: string, ...args: unknown[]) => void;
