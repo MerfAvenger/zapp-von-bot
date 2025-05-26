@@ -27,6 +27,7 @@ if (!databaseUser || !databasePassword || !databaseName) {
 
 const savyIdleTimeout = parseInt(process.env.SAVY_IDLE_TIMEOUT_SECONDS) || 5;
 const savyChecksumKey = process.env.SAVY_CHECKSUM_KEY;
+const deviceType = process.env.SAVY_DEVICE_TYPE || "DeviceTypeAndroid";
 
 const savyBaseUrl = process.env.SAVY_BASE_URL;
 
@@ -57,6 +58,7 @@ const config: ServerConfig = {
   savy: {
     baseUrl: savyBaseUrl,
     checksumKey: savyChecksumKey,
+    deviceType,
     idleTimeout: savyIdleTimeout,
   },
 };

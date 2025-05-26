@@ -4,6 +4,7 @@ import { GET_DEVICES, INSERT_DEVICE } from "../database/queries/device";
 import { makeQuery } from "../database/query";
 import { isValidDevice } from "../utils/validation/device";
 import {
+  buildDeviceAuthenticationParams,
   createDeviceKey,
   DEVICE_TIMESTAMP_FORMAT,
   hasDeviceAuthenticationExpired as deviceAuthenticationHasExpired,
@@ -15,8 +16,7 @@ import Logger from "../logger/Logger";
 import config from "../config";
 import moment from "moment";
 import { md5 } from "js-md5";
-
-const DEVICE_LOGIN_PATH = "/UserService/DeviceLogin11";
+import { buildSavyUrl, SAVY_API_ENDPOINTS } from "../utils/savy/endpoints";
 
 const logger = Logger.createWrapper("DeviceService");
 
@@ -94,25 +94,8 @@ export default class DeviceService {
   }
 
   static async authenticateDevice(device: Device): Promise<Device> {
-    const params = {
-      advertisingKey: "",
-      deviceKey: device.device_key,
-      clientDateTime: moment().utc().format(DEVICE_TIMESTAMP_FORMAT),
-      deviceType: "DeviceTypeAndroid",
-    };
-
-    const checksumString =
-      params.deviceKey +
-      params.clientDateTime +
-      params.deviceType +
-      config.savy.checksumKey +
-      "savysoda";
-
-    params["checksum"] = md5(checksumString);
-
-    const paramsString = new URLSearchParams(params).toString();
-
-    const url = `${config.savy.baseUrl}${DEVICE_LOGIN_PATH}?${paramsString}`;
+    const params = buildDeviceAuthenticationParams(device);
+    const url = buildSavyUrl(SAVY_API_ENDPOINTS.device.deviceLogin, params);
 
     const response = await fetch(url, {
       method: "POST",

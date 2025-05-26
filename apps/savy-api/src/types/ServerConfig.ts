@@ -9,6 +9,7 @@ import type { PoolConfig } from "pg";
  */
 type SavyConfig = {
   baseUrl: string;
+  deviceType: string;
   checksumKey: string;
   idleTimeout: number;
 };
