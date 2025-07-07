@@ -24,7 +24,7 @@ export function createDeviceChecksum(
   clientDateTime: string
 ): string {
   const checksumString =
-    device.device_key +
+    device.deviceKey +
     clientDateTime +
     config.savy.deviceType +
     config.savy.checksumKey +
@@ -38,7 +38,7 @@ export function buildDeviceAuthenticationParams(
 ): Record<string, string> {
   const params: Record<string, string> = {
     advertisingKey: "",
-    deviceKey: device.device_key,
+    deviceKey: device.deviceKey,
     clientDateTime: moment().utc().format(DEVICE_TIMESTAMP_FORMAT),
     deviceType: "DeviceTypeAndroid",
   };
@@ -55,7 +55,7 @@ export function buildDeviceAuthenticationParams(
 }
 
 export function hasDeviceAuthenticationExpired(device: Device): boolean {
-  if (!device.access_token || !device.last_login) {
+  if (!device.accessToken || !device.lastLogin) {
     Logger.warn(
       "hasDeviceAuthenticationExpired",
       "Device access token or last login time is missing."
@@ -64,7 +64,7 @@ export function hasDeviceAuthenticationExpired(device: Device): boolean {
   }
 
   const currentTime = moment();
-  const lastLoginTime = moment(device.last_login);
+  const lastLoginTime = moment(device.lastLogin);
 
   // Preserve precision by using milliseconds
   const timeDifference = currentTime.diff(lastLoginTime, "milliseconds");

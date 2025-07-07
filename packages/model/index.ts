@@ -1,8 +1,18 @@
-export interface Device {
+export interface DeviceData {
   id: number;
   device_key: string;
   access_token: string | null;
   last_login: string | null;
+}
+
+export interface DeviceAuthentication {
+  accessToken: string | null;
+  lastLogin: string | null;
+}
+
+export interface Device extends DeviceAuthentication {
+  id: number;
+  deviceKey: string;
 }
 
 export interface Account {
@@ -10,6 +20,24 @@ export interface Account {
   name: string;
   email: string;
   password: string;
+}
+
+/**
+ *
+ */
+export interface Fleet {
+  id: string;
+  name: string;
+  users: User[];
+}
+
+/**
+ * This is an extensible interface of useful properties from the PSS user data.
+ */
+export interface User {
+  id: string;
+  name: string;
+  trophy: string;
 }
 
 /*

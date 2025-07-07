@@ -7,7 +7,7 @@ export type PropertyMap = Record<string, string>;
  * @param propertyMap - A mapping of parsed keys to unparsed keys.
  * @returns A new object with mapped properties.
  */
-export default function mapXMLProperties<TMappedObject>(
+export function mapXMLProperties<TMappedObject>(
   object: any,
   propertyMap: PropertyMap
 ): TMappedObject {

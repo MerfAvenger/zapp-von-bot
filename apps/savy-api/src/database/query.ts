@@ -8,7 +8,7 @@ export async function makeQuery<TEntries>(
   query: string,
   values: any[],
   validateData: (data: unknown) => boolean
-): Promise<TEntries | null> {
+): Promise<TEntries[] | null> {
   const client = await pool.connect();
   const queryConfig: QueryConfig = {
     text: query,
@@ -25,7 +25,6 @@ export async function makeQuery<TEntries>(
 
       const results = data.rows;
 
-      logger.log("Data retrieved successfully:", queryConfig, results);
       const validResults = results.filter((result) => {
         const isValid = validateData(result);
         if (!isValid) {
@@ -39,7 +38,8 @@ export async function makeQuery<TEntries>(
         return null;
       }
 
-      return results as TEntries;
+      logger.log("Data retrieved successfully:", queryConfig, validResults);
+      return validResults as TEntries;
     })
     .catch((error: Error) => {
       logger.error("Error executing query", queryConfig, error);
