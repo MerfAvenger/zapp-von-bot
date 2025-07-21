@@ -86,7 +86,7 @@ export default class FleetService {
     }
 
     const fleets = extractFleets(response);
-    if (fleets.length === 0) {
+    if (!fleets) {
       logger.warn("No fleets found with the specified name.");
       return null;
     }
