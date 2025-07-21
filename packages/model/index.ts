@@ -23,7 +23,7 @@ export interface Account {
 }
 
 /**
- * 
+ *
  */
 export interface Fleet {
   id: string;
@@ -37,6 +37,8 @@ export interface User {
   id: string;
   name: string;
   trophy: string;
+  lastLogin: string;
+  stars: string;
 }
 
 /*

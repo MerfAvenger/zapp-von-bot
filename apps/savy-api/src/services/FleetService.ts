@@ -16,6 +16,8 @@ function extractUsers(response: string): User[] {
       id: "Id",
       name: "Name",
       trophy: "Trophy",
+      lastLogin: "LastLoginDate",
+      stars: "TournamentBonusScore",
     }
   );
 }
