@@ -130,12 +130,12 @@ export default class DeviceService {
     const response = await fetch(url, {
       method: "POST",
     })
-      .then((res) => {
+      .then(async (res) => {
         if (!res.ok) {
           logger.error("Error in response:", res);
           throw new Error("Failed to authenticate device.");
         }
-        return res.text();
+        return await res.text();
       })
       .catch((error) => {
         logger.error("Error fetching device authentication:", error);
@@ -147,7 +147,7 @@ export default class DeviceService {
     ]).extract<DeviceAuthentication>(["UserService", "UserLogin"], {
       accessToken: "accessToken", // Yes, this is lowercase. Thanks Savy.
       lastLogin: "PreviousLastLoginDate",
-    });
+    })[0];
 
     if (!authenticationData) {
       throw new Error("Failed to authenticate device.");

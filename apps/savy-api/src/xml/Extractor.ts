@@ -24,21 +24,21 @@ export default class Extractor {
 
   /**
    * Extract an object from the XML document used to create this extractor,
-   * optionally remapping its properties using a provided structure.
+   * remapping its properties using a provided structure.
    *
    * @param pathNodes An array of path strings to traverse, in order, to find the target object.
    * @param propertyMap
-   * @returns Either a singular or array of (optionally remapped) objects from the XML document, or null if an error occurs.
+   * @returns An array of objects from the XML document, or null if an error occurs.
    */
   extract<TMappedObject>(
     pathNodes: NodePath,
-    propertyMap?: PropertyMap
-  ): TMappedObject | null {
+    propertyMap: PropertyMap
+  ): TMappedObject[] | null {
     const error = this.#getErrorFromDocument();
 
     if (error) {
       logger.error(`Error in XML document: ${error}`);
-      return null;
+      throw new Error(`XML Error: ${error}`);
     }
 
     let object = this.#dom;
@@ -57,17 +57,21 @@ export default class Extractor {
       return null;
     }
 
-    if (Array.isArray(object)) {
-      return propertyMap
-        ? ((object as any[]).map((child) =>
-            mapXMLProperties(child, propertyMap)
-          ) as TMappedObject)
-        : (object as TMappedObject);
+    logger.log(
+      `Extracting object from XML document at path "${pathNodes.join(".")}"...`,
+      object
+    );
+
+    if (!Array.isArray(object)) {
+      object = [object];
+      logger.log(
+        `Converted single object to array at path "${pathNodes.join(".")}".`
+      );
     }
 
-    return propertyMap
-      ? mapXMLProperties(object, propertyMap)
-      : (object as TMappedObject);
+    return (object as unknown[]).map((child) =>
+      mapXMLProperties(child, propertyMap)
+    ) as TMappedObject[];
   }
 
   /**

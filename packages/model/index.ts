@@ -23,12 +23,11 @@ export interface Account {
 }
 
 /**
- *
+ * 
  */
 export interface Fleet {
   id: string;
   name: string;
-  users: User[];
 }
 
 /**

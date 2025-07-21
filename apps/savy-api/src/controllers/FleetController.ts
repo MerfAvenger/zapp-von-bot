@@ -1,20 +1,22 @@
-import { Handler, Request, Response } from "express";
-import DeviceService from "../services/DeviceService";
+import { Handler } from "express";
 import Logger from "../logger/Logger";
 import FleetService from "../services/FleetService";
 
 const logger = Logger.createWrapper("FleetController");
 
 export default class FleetController {
-  static getFleetUsersById: Handler = (req, res, _next) => {
-    logger.log("Get fleet users request received.", req);
+  static getFleetUsersByFleetId: Handler = (req, res, _next) => {
+    logger.log("Get fleet users request received.", req.params);
 
-    const allianceId = req.params.allianceId as string;
+    const fleetId = req.params.fleetId as string;
 
-    FleetService.getFleetUsers(allianceId)
+    FleetService.getFleetUsersByFleetId(fleetId)
       .then((users) => {
         if (!users) {
-          throw new Error("No users found for the specified fleet.");
+          logger.warn("No users found for the specified fleet ID:", fleetId);
+          return res
+            .status(404)
+            .json({ error: "No users found for this fleet." });
         }
 
         logger.log("Fleet user list request successful.", users);
@@ -23,7 +25,39 @@ export default class FleetController {
       .catch((error) => {
         logger.error(
           "Failed to create or fetch fleet users for fleet:",
-          allianceId,
+          fleetId,
+          error
+        );
+        res
+          .status(500)
+          .json({ error: "Internal server error fetching fleet users." });
+      });
+  };
+
+  static getFleetUsersByFleetName: Handler = (req, res, _next) => {
+    logger.log("Get fleet users by name request received.", req.params);
+
+    const fleetName = req.params.fleetName as string;
+
+    FleetService.getFleetUsersByFleetName(fleetName)
+      .then((users) => {
+        if (!users) {
+          logger.warn(
+            "No users found for the specified fleet name:",
+            fleetName
+          );
+          return res.status(404).json({
+            error: "No users found for the specified fleet name.",
+          });
+        }
+
+        logger.log("Fleet user list request successful.", users);
+        res.status(200).json(users);
+      })
+      .catch((error) => {
+        logger.error(
+          "Failed to create or fetch fleet users for fleet:",
+          fleetName,
           error
         );
         res
