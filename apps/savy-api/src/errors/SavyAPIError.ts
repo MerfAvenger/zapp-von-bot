@@ -63,3 +63,12 @@ export class NoFleetUsersError extends SavyAPIError {
     });
   }
 }
+
+export class FilterNotFoundError extends SavyAPIError {
+  constructor(filterName: string) {
+    super(`Filter not found: ${filterName}.`, {
+      code: HTTPCode.NOT_FOUND,
+      reason: "The requested filter could not be found.",
+    });
+  }
+}

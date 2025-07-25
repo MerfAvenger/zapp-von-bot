@@ -16,6 +16,7 @@ import {
 const logger = Logger.createWrapper("FleetService");
 
 function extractUsers(response: string): User[] {
+  logger.log("Extracting users from response.");
   return new Extractor(response, ["ListUsers"]).extract<User>(
     ["AllianceService", "ListUsers", "Users", "User"],
     {
@@ -30,6 +31,7 @@ function extractUsers(response: string): User[] {
 }
 
 function extractFleets(response: string): Fleet[] {
+  logger.log("Extracting fleets from response.");
   return new Extractor(response, ["SearchAlliances"]).extract<Fleet>(
     ["AllianceService", "SearchAlliances", "Alliances", "Alliance"],
     {
@@ -45,6 +47,7 @@ export default class FleetService {
     maxResults = 5,
     offset = 0
   ): Promise<Fleet[] | null> {
+    logger.log("Searching fleets with name:", fleetName);
     const fleets = DeviceService.authenticatedFetch<Fleet[]>(
       SAVY_API_ENDPOINTS.fleet.searchFleets,
       { name: fleetName, take: maxResults.toString(), skip: offset.toString() },
@@ -60,6 +63,7 @@ export default class FleetService {
   }
 
   static async getFleetUsersByFleetId(fleetId: string): Promise<User[]> {
+    logger.log("Fetching fleet users by fleet ID:", fleetId);
     return await DeviceService.authenticatedFetch<User[]>(
       SAVY_API_ENDPOINTS.fleet.getListUsers,
       { allianceId: fleetId, skip: "0", take: "100" },
@@ -68,6 +72,7 @@ export default class FleetService {
   }
 
   static async getFleetByName(fleetName: string): Promise<Fleet> {
+    logger.log("Fetching fleet by name:", fleetName);
     const fleets = await this.searchFleets(fleetName);
 
     if (!fleets || fleets.length === 0) {
@@ -85,7 +90,9 @@ export default class FleetService {
   }
 
   static async getFleetUsersByFleetName(fleetName: string): Promise<User[]> {
+    logger.log("Fetching fleet users by fleet name:", fleetName);
     const fleet = await this.getFleetByName(fleetName);
+
     if (!fleet) {
       throw new FleetNotFoundError(`Fleet with name ${fleetName} not found.`);
     }

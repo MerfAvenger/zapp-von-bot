@@ -2,6 +2,7 @@ import { Handler } from "express";
 import Logger from "../logger/Logger";
 import FleetService from "../services/FleetService";
 import { SavyAPIError } from "../errors/SavyAPIError";
+import FilterExecutor from "../utils/filters/FilterExecutor";
 
 const logger = Logger.createWrapper("FleetController");
 
@@ -55,6 +56,34 @@ export default class FleetController {
         return res
           .status(500)
           .json({ error: "Internal server error fetching fleet users." });
+      });
+  };
+
+  static getFilteredFleetUsers: Handler = (req, res, _next) => {
+    logger.log("Get filtered fleet users request received.", req.body);
+
+    const { fleetName, filter } = req.body;
+
+    FleetService.getFleetUsersByFleetName(fleetName)
+      .then((users) => {
+        const filteredUsers = FilterExecutor.executeFilter(filter, users);
+
+        logger.log("Filtered fleet users request successful.", filteredUsers);
+        res.status(200).json(filteredUsers);
+      })
+      .catch((error) => {
+        if (error instanceof SavyAPIError) {
+          logger.error(
+            "Failed to fetch filtered fleet users for fleet:",
+            fleetName,
+            error
+          );
+          return res.status(error.code).json({ error: error.reason });
+        }
+
+        return res.status(500).json({
+          error: "Internal server error fetching filtered fleet users.",
+        });
       });
   };
 }
