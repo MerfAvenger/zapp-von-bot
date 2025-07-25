@@ -1,6 +1,7 @@
 import { Handler } from "express";
 import Logger from "../logger/Logger";
 import FleetService from "../services/FleetService";
+import { SavyAPIError } from "../errors/SavyAPIError";
 
 const logger = Logger.createWrapper("FleetController");
 
@@ -12,23 +13,20 @@ export default class FleetController {
 
     FleetService.getFleetUsersByFleetId(fleetId)
       .then((users) => {
-        if (!users) {
-          logger.warn("No users found for the specified fleet ID:", fleetId);
-          return res
-            .status(404)
-            .json({ error: "No users found for this fleet." });
-        }
-
         logger.log("Fleet user list request successful.", users);
         res.status(200).json(users);
       })
       .catch((error) => {
-        logger.error(
-          "Failed to create or fetch fleet users for fleet:",
-          fleetId,
-          error
-        );
-        res
+        if (error instanceof SavyAPIError) {
+          logger.error(
+            "Failed to fetch fleet users for fleet ID:",
+            fleetId,
+            error
+          );
+          return res.status(error.code).json({ error: error.reason });
+        }
+
+        return res
           .status(500)
           .json({ error: "Internal server error fetching fleet users." });
       });
@@ -41,26 +39,20 @@ export default class FleetController {
 
     FleetService.getFleetUsersByFleetName(fleetName)
       .then((users) => {
-        if (!users) {
-          logger.warn(
-            "No users found for the specified fleet name:",
-            fleetName
-          );
-          return res.status(404).json({
-            error: "No users found for the specified fleet name.",
-          });
-        }
-
         logger.log("Fleet user list request successful.", users);
         res.status(200).json(users);
       })
       .catch((error) => {
-        logger.error(
-          "Failed to create or fetch fleet users for fleet:",
-          fleetName,
-          error
-        );
-        res
+        if (error instanceof SavyAPIError) {
+          logger.error(
+            "Failed to fetch fleet users for fleet:",
+            fleetName,
+            error
+          );
+          return res.status(error.code).json({ error: error.reason });
+        }
+
+        return res
           .status(500)
           .json({ error: "Internal server error fetching fleet users." });
       });

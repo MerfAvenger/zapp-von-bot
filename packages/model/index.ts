@@ -38,13 +38,14 @@ export interface User {
   name: string;
   trophy: string;
   lastLogin: string;
+  attacks: string;
   stars: string;
 }
 
 /*
  This is an interface for the user data returned from the PSS API. I've tried to remove as much of the unnecessary PII as possible, but if we should remove anything else, feel free to suggest it.
 */
-export interface UserInterface {
+export interface SavyUser {
   AllianceId: number;
   AllianceJoinDate: Date;
   AllianceMembership: string;

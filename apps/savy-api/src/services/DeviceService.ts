@@ -10,7 +10,10 @@ import {
   UPDATE_DEVICE,
 } from "../database/queries/device";
 import { makeQuery } from "../database/query";
-import { isValidDeviceData } from "../utils/validation/device";
+import {
+  isValidDeviceAuthentication,
+  isValidDeviceData,
+} from "../utils/validation/device";
 import {
   mapDeviceDataToDevice,
   mapDeviceToDeviceData,
@@ -23,8 +26,27 @@ import {
 import Logger from "../logger/Logger";
 import { buildSavyUrl, SAVY_API_ENDPOINTS } from "../utils/savy/endpoints";
 import Extractor from "../xml/Extractor";
+import { DeviceAuthenticationError } from "../errors/SavyAPIError";
 
 const logger = Logger.createWrapper("DeviceService");
+
+function extractDeviceAuthentication(response: string): DeviceAuthentication {
+  const deviceData = new Extractor(response, ["UserLogin"]).extract<DeviceData>(
+    ["UserService", "UserLogin"],
+    {
+      accessToken: "accessToken",
+      lastLogin: "PreviousLastLoginDate",
+    }
+  )[0];
+
+  if (!isValidDeviceAuthentication(deviceData)) {
+    throw new DeviceAuthenticationError(
+      "Failed to extract device data from response."
+    );
+  }
+
+  return deviceData;
+}
 
 export default class DeviceService {
   static async getDevice(): Promise<Device | null> {
@@ -33,7 +55,7 @@ export default class DeviceService {
     )[0];
 
     if (!deviceData) {
-      logger.warn("No devices found.");
+      logger.warn("No device found in the database.");
       return null;
     }
 
@@ -43,7 +65,7 @@ export default class DeviceService {
     return device;
   }
 
-  static async createDevice(): Promise<Device | null> {
+  static async createDevice(): Promise<Device> {
     const deviceKey = createDeviceKey();
 
     const createdDevice = (
@@ -55,55 +77,19 @@ export default class DeviceService {
       )
     )[0];
 
-    if (!createdDevice) {
-      logger.error("No device created.");
-      return null;
-    }
-
     const device = mapDeviceDataToDevice(createdDevice);
+
+    if (!device) {
+      throw new DeviceAuthenticationError("Failed to create new device.");
+    }
 
     logger.log("Device created:", device);
     return device;
   }
 
-  static async getActiveDevice(): Promise<Device> {
-    logger.log("Retrieving active device.");
-    const device = await this.getDevice();
-
-    if (!device) {
-      logger.warn("No device found, creating a new one.");
-      const newDevice = await this.createDevice();
-
-      if (!newDevice) {
-        throw new Error("Failed to create a new device.");
-      }
-
-      return newDevice;
-    }
-
-    if (deviceAuthenticationHasExpired(device)) {
-      logger.warn("Device authentication has expired.");
-      const authenticatedDevice = await this.authenticateDevice(device);
-
-      if (!authenticatedDevice) {
-        logger.error("Failed to authenticate device.");
-        throw new Error("Failed to authenticate device.");
-      }
-
-      logger.log("Device re-authenticated:", authenticatedDevice);
-      return authenticatedDevice;
-    }
-
-    return device;
-  }
-
   static async updateDevice(device: Device): Promise<Device | null> {
-    if (!device) {
-      logger.error("No device provided for update.");
-      throw new Error("No device provided for update.");
-    }
-
     const deviceData = mapDeviceToDeviceData(device);
+
     const updatedDeviceData = (
       await makeQuery<DeviceData>(
         pool,
@@ -114,9 +100,9 @@ export default class DeviceService {
     )[0];
 
     const updatedDevice = mapDeviceDataToDevice(updatedDeviceData);
+
     if (!updatedDevice) {
-      logger.error("Failed to update device.");
-      throw new Error("Failed to update device.");
+      throw new DeviceAuthenticationError("Failed to update device.");
     }
 
     logger.log("Device updated:", updatedDevice);
@@ -132,39 +118,79 @@ export default class DeviceService {
     })
       .then(async (res) => {
         if (!res.ok) {
-          logger.error("Error in response:", res);
-          throw new Error("Failed to authenticate device.");
+          throw new DeviceAuthenticationError(
+            `Error authenticating device: ${res.statusText}`
+          );
         }
         return await res.text();
       })
       .catch((error) => {
-        logger.error("Error fetching device authentication:", error);
-        throw new Error("Failed to authenticate device.");
+        throw new DeviceAuthenticationError(
+          `Failed to authenticate device: ${error.message}`,
+          { trace: error.stack }
+        );
       });
 
-    const authenticationData = new Extractor(response, [
-      "UserLogin",
-    ]).extract<DeviceAuthentication>(["UserService", "UserLogin"], {
-      accessToken: "accessToken", // Yes, this is lowercase. Thanks Savy.
-      lastLogin: "PreviousLastLoginDate",
-    })[0];
-
-    if (!authenticationData) {
-      throw new Error("Failed to authenticate device.");
-    }
-
-    logger.log("Device authenticated:", authenticationData);
+    const authenticationData = extractDeviceAuthentication(response);
 
     const updatedDevice = await this.updateDevice({
       ...device,
       ...authenticationData,
     });
 
-    if (!updatedDevice) {
-      console.warn("Failed to update device after authentication.");
-      throw new Error("Failed to update device after authentication.");
-    }
+    logger.log("Device authenticated:", authenticationData);
 
     return updatedDevice;
+  }
+
+  static async getActiveDevice(): Promise<Device> {
+    logger.log("Retrieving active device.");
+    let device = await this.getDevice();
+
+    if (!device) {
+      logger.warn("No device found, creating a new one.");
+      device = await this.createDevice();
+    }
+
+    if (deviceAuthenticationHasExpired(device)) {
+      logger.warn("Device authentication has expired, refreshing auth.");
+      device = await this.authenticateDevice(device);
+    }
+
+    return device;
+  }
+
+  static async authenticatedFetch<TResponseData>(
+    endpointUrl: string,
+    params: Record<string, string>,
+    extractionCallback: (response: string) => TResponseData
+  ): Promise<TResponseData> {
+    const device = await this.getActiveDevice();
+    const url = buildSavyUrl(endpointUrl, {
+      ...params,
+      accessToken: device.accessToken,
+    });
+
+    logger.log("Making authenticated request to URL:", url);
+    const response = await fetch(url, {
+      method: "GET",
+    })
+      .then(async (res) => {
+        if (!res.ok) {
+          throw new DeviceAuthenticationError(
+            `Error making authenticated request: ${res.statusText}`
+          );
+        }
+        return await res.text();
+      })
+      .catch((error) => {
+        throw new DeviceAuthenticationError(
+          `Failed to make authenticated request: ${error.message}`,
+          { trace: error.stack }
+        );
+      });
+
+    logger.log("Response received from authenticated request.");
+    return extractionCallback(response);
   }
 }

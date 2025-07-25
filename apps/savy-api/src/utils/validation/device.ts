@@ -1,8 +1,10 @@
-import { Device, DeviceData } from "../../../../../packages/model/types";
+import {
+  Device,
+  DeviceAuthentication,
+  DeviceData,
+} from "../../../../../packages/model/types";
 import Logger from "../../logger/Logger";
 const logger = Logger.createWrapper("DeviceUtils");
-
-
 
 export function isValidDeviceData(device: unknown): device is DeviceData {
   if (typeof device !== "object" || device === null) {
@@ -34,6 +36,31 @@ export function isValidDeviceData(device: unknown): device is DeviceData {
     testDevice.last_login !== null
   ) {
     logger.warn("Invalid last login time:", testDevice.last_login);
+    return false;
+  }
+
+  return true;
+}
+
+export function isValidDeviceAuthentication(
+  deviceAuthentication: unknown
+): deviceAuthentication is DeviceAuthentication {
+  if (
+    typeof deviceAuthentication !== "object" ||
+    deviceAuthentication === null
+  ) {
+    return false;
+  }
+
+  const auth = deviceAuthentication as DeviceAuthentication;
+
+  if (typeof auth.accessToken !== "string" && auth.accessToken !== null) {
+    logger.warn("Invalid access token:", auth.accessToken);
+    return false;
+  }
+
+  if (typeof auth.lastLogin !== "string" && auth.lastLogin !== null) {
+    logger.warn("Invalid last login time:", auth.lastLogin);
     return false;
   }
 
