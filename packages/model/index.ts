@@ -28,10 +28,10 @@ export interface Account {
 export interface Fleet {
   id: string;
   name: string;
-  trophies: number;
+  trophies: string;
   division: string;
-  stars: number;
-  numberOfUsers: number;
+  stars: string;
+  numberOfUsers: string;
 }
 
 export interface FleetTournamentData {
@@ -43,11 +43,9 @@ export interface FleetTournamentData {
   day: number;
   month: number;
   year: number;
-  trophies: number;
-  number_of_users: number;
+  trophies: string;
+  number_of_users: string;
 }
-
-export type TournamentFleet = Fleet & FleetTournamentData;
 
 export interface SavyFleet {
   AllianceId: number;
@@ -80,13 +78,22 @@ export interface User {
   name: string;
   trophy: string;
   lastLogin: string;
-  attacks: string;
   stars: string;
+  attacks: string;
 }
 
-export interface UserTournamentData {}
-
-export type TournamentUser = User & UserTournamentData;
+export interface UserTournamentData {
+  id: string;
+  name: string;
+  stars: string;
+  attacks: string;
+  division: string;
+  hour: number;
+  day: number;
+  month: number;
+  year: number;
+  trophies: string;
+}
 
 /*
  This is an interface for the user data returned from the PSS API. I've tried to remove as much of the unnecessary PII as possible, but if we should remove anything else, feel free to suggest it.

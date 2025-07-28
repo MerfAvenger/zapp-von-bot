@@ -2,12 +2,15 @@ import express from "express";
 import router from "./router";
 import config from "./config";
 import Logger from "./logger/Logger";
+import DatabaseManager from "./database/DatabaseManager";
 
 const logger = Logger.createWrapper("App");
 
 const app = express();
 app.use(express.json());
 app.use(router);
+
+DatabaseManager.initialiseTables();
 
 app.listen(config.port, () => {
   logger.log(`Server is running on port ${config.port}`);
