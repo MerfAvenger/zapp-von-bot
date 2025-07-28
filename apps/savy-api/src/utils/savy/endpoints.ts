@@ -9,6 +9,7 @@ export const SAVY_API_ENDPOINTS = {
     getUser: `${SAVY_BASE_URL}/AllianceService/GetUser`,
     getListUsers: `${SAVY_BASE_URL}/AllianceService/ListUsers`,
     searchFleets: `${SAVY_BASE_URL}/AllianceService/SearchAlliances`,
+    getTournamentFleets: `${SAVY_BASE_URL}/AllianceService/ListAlliancesWithDivision`,
   },
 };
 

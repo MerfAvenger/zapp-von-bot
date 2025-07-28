@@ -27,26 +27,9 @@ import Logger from "../logger/Logger";
 import { buildSavyUrl, SAVY_API_ENDPOINTS } from "../utils/savy/endpoints";
 import Extractor from "../xml/Extractor";
 import { DeviceAuthenticationError } from "../errors/SavyAPIError";
+import { extractDeviceAuthentication } from "../xml/extractors";
 
 const logger = Logger.createWrapper("DeviceService");
-
-function extractDeviceAuthentication(response: string): DeviceAuthentication {
-  const deviceData = new Extractor(response, ["UserLogin"]).extract<DeviceData>(
-    ["UserService", "UserLogin"],
-    {
-      accessToken: "accessToken",
-      lastLogin: "PreviousLastLoginDate",
-    }
-  )[0];
-
-  if (!isValidDeviceAuthentication(deviceData)) {
-    throw new DeviceAuthenticationError(
-      "Failed to extract device data from response."
-    );
-  }
-
-  return deviceData;
-}
 
 export default class DeviceService {
   static async getDevice(): Promise<Device | null> {

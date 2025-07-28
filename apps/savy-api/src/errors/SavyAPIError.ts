@@ -72,3 +72,12 @@ export class FilterNotFoundError extends SavyAPIError {
     });
   }
 }
+
+export class NoTournamentFleetsError extends SavyAPIError {
+  constructor() {
+    super("No tournament fleets found.", {
+      code: HTTPCode.NOT_FOUND,
+      reason: "No tournament fleets were found.",
+    });
+  }
+}

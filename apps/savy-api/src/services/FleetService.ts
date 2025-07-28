@@ -12,34 +12,12 @@ import {
   NoFleetUsersError,
   TooManyFleetsError,
 } from "../errors/SavyAPIError";
+import {
+  extractFleetsFromSearchAlliances,
+  extractUsersFromListUsers,
+} from "../xml/extractors";
 
 const logger = Logger.createWrapper("FleetService");
-
-function extractUsers(response: string): User[] {
-  logger.log("Extracting users from response.");
-  return new Extractor(response, ["ListUsers"]).extract<User>(
-    ["AllianceService", "ListUsers", "Users", "User"],
-    {
-      id: "Id",
-      name: "Name",
-      trophy: "Trophy",
-      lastLogin: "LastLoginDate",
-      attacks: "TournamentBonusScore",
-      stars: "AllianceScore",
-    }
-  );
-}
-
-function extractFleets(response: string): Fleet[] {
-  logger.log("Extracting fleets from response.");
-  return new Extractor(response, ["SearchAlliances"]).extract<Fleet>(
-    ["AllianceService", "SearchAlliances", "Alliances", "Alliance"],
-    {
-      id: "AllianceId",
-      name: "AllianceName",
-    }
-  );
-}
 
 export default class FleetService {
   static async searchFleets(
@@ -51,7 +29,7 @@ export default class FleetService {
     const fleets = DeviceService.authenticatedFetch<Fleet[]>(
       SAVY_API_ENDPOINTS.fleet.searchFleets,
       { name: fleetName, take: maxResults.toString(), skip: offset.toString() },
-      extractFleets
+      extractFleetsFromSearchAlliances
     );
 
     if (!fleets) {
@@ -67,7 +45,7 @@ export default class FleetService {
     return await DeviceService.authenticatedFetch<User[]>(
       SAVY_API_ENDPOINTS.fleet.getListUsers,
       { allianceId: fleetId, skip: "0", take: "100" },
-      extractUsers
+      extractUsersFromListUsers
     );
   }
 
