@@ -1,5 +1,5 @@
 import { Handler } from "express";
-import Logger from "../logger/Logger";
+import Logger from "logger";
 import TournamentService from "../services/TournamentService";
 import { SavyAPIError } from "../errors/SavyAPIError";
 

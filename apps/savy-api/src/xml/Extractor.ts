@@ -1,6 +1,6 @@
 import { XMLParser } from "fast-xml-parser";
 import { mapXMLProperties, PropertyMap } from "../utils/map/xml";
-import Logger from "../logger/Logger";
+import Logger from "logger";
 
 export type NodePath = string[];
 

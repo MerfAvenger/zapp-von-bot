@@ -2,7 +2,7 @@ import { Account, Device } from "../../../../packages/model/types";
 import pool from "../database/pool";
 import { makeQuery } from "../database/query";
 
-import Logger from "../logger/Logger";
+import Logger from "logger";
 import { hasDeviceAuthenticationExpired } from "../utils/savy/device";
 import { isValidAccount } from "../utils/validation/account";
 

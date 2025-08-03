@@ -3,7 +3,7 @@ import {
   DeviceAuthentication,
   DeviceData,
 } from "../../../../../packages/model/types";
-import Logger from "../../logger/Logger";
+import Logger from "logger";
 const logger = Logger.createWrapper("DeviceUtils");
 
 export function isValidDeviceData(device: unknown): device is DeviceData {

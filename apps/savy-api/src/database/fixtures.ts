@@ -1,5 +1,5 @@
 import { existsSync, readFileSync } from "fs";
-import Logger from "../logger/Logger";
+import Logger from "logger";
 
 export interface FixtureData {
   query: string;

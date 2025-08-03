@@ -1,5 +1,5 @@
 import { Handler } from "express";
-import Logger from "../logger/Logger";
+import Logger from "logger";
 import FleetService from "../services/FleetService";
 import { SavyAPIError } from "../errors/SavyAPIError";
 import FilterExecutor from "../utils/filters/FilterExecutor";

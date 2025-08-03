@@ -1,7 +1,7 @@
 import { Router } from "express";
 
 import Routes from "./routes";
-import Logger from "./logger/Logger";
+import Logger from "logger";
 
 const router = Router();
 

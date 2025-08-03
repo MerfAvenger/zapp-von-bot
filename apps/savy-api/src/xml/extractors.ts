@@ -6,7 +6,7 @@ import {
   User,
 } from "../../../../packages/model/types";
 import { DeviceAuthenticationError } from "../errors/SavyAPIError";
-import Logger from "../logger/Logger";
+import Logger from "logger";
 import {
   mapFleetDate as mapFleetTournamentDataDate,
   mapFleetDivision,

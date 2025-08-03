@@ -1,0 +1,21 @@
+{
+  "name": "logger",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [],
+  "author": "",
+  "main": "dist/index.js",
+  "license": "ISC",
+  "packageManager": "pnpm@10.9.0",
+  "scripts": {
+    "build": "tsc",
+    "prepare": "tsc"
+  },
+  "devDependencies": {
+    "@types/node": "^22.16.0",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "moment": "^2.30.1"
+  }
+}

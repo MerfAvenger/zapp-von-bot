@@ -1,6 +1,6 @@
 import { Pool, PoolConfig } from "pg";
 import config from "../config";
-import Logger from "../logger/Logger";
+import Logger from "logger";
 
 const logger = Logger.createWrapper("DatabasePool");
 

@@ -1,6 +1,6 @@
 import { Fleet, FleetTournamentData } from "../../../../packages/model/types";
 import { NoTournamentFleetsError } from "../errors/SavyAPIError";
-import Logger from "../logger/Logger";
+import Logger from "logger";
 import { SAVY_API_ENDPOINTS } from "../utils/savy/endpoints";
 import {
   extractTournamentFleetDataList,

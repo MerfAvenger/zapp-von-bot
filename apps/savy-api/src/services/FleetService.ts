@@ -1,4 +1,4 @@
-import Logger from "../logger/Logger";
+import Logger from "logger";
 import pool from "../database/pool";
 import { makeQuery } from "../database/query";
 import DeviceService from "./DeviceService";

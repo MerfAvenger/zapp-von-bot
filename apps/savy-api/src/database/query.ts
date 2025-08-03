@@ -1,5 +1,5 @@
 import { Pool, QueryConfig, QueryResult } from "pg";
-import Logger from "../logger/Logger";
+import Logger from "logger";
 
 const logger = Logger.createWrapper("makeQuery");
 

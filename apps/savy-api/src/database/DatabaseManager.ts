@@ -1,4 +1,4 @@
-import Logger from "../logger/Logger";
+import Logger from "logger";
 import pool from "./pool";
 import DatabaseSchema from "./schema/schema";
 import devicesSchema from "./schema/devices";

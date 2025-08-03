@@ -1,6 +1,6 @@
 import moment from "moment";
 import { Device } from "../../../../../packages/model/types";
-import Logger from "../../logger/Logger";
+import Logger from "logger";
 import config from "../../config";
 import { md5 } from "js-md5";
 

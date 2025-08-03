@@ -1,7 +1,7 @@
 import express from "express";
 import router from "./router";
 import config from "./config";
-import Logger from "./logger/Logger";
+import Logger from "logger";
 import DatabaseManager from "./database/DatabaseManager";
 
 const logger = Logger.createWrapper("App");

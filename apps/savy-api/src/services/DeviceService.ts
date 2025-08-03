@@ -23,7 +23,7 @@ import {
   createDeviceKey,
   hasDeviceAuthenticationExpired as deviceAuthenticationHasExpired,
 } from "../utils/savy/device";
-import Logger from "../logger/Logger";
+import Logger from "logger";
 import { buildSavyUrl, SAVY_API_ENDPOINTS } from "../utils/savy/endpoints";
 import Extractor from "../xml/Extractor";
 import { DeviceAuthenticationError } from "../errors/SavyAPIError";
