@@ -38,11 +38,10 @@ export function extractFleetsFromSearchAlliances(response: string): Fleet[] {
   Logger.log("ExtractFleetsFromSearch", "Extracting fleets from response.");
 
   const fields: Record<keyof Fleet, string> = {
-    id: "Id",
-    name: "Name",
+    id: "AllianceId",
+    name: "AllianceName",
     trophies: "Trophy",
     division: "DivisionDesignId",
-    stars: "Stars",
     numberOfUsers: "NumberOfMembers",
   };
 
@@ -61,11 +60,10 @@ export function extractTournamentFleets(response: string): Fleet[] {
   );
 
   const fields: Record<keyof Fleet, string> = {
-    id: "Id",
-    name: "Name",
+    id: "AllianceId",
+    name: "AllianceNameName",
     trophies: "Trophy",
     division: "DivisionDesignId",
-    stars: "Stars",
     numberOfUsers: "NumberOfMembers",
   };
 

@@ -10,7 +10,7 @@ const app = express();
 app.use(express.json());
 app.use(router);
 
-DatabaseManager.initialiseTables();
+// DatabaseManager.initialiseTables();
 
 app.listen(config.port, () => {
   logger.log(`Server is running on port ${config.port}`);

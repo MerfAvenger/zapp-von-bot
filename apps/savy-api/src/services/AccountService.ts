@@ -41,7 +41,5 @@ export default class AccountService {
       logger.error("No account found for authentication.");
       return null;
     }
-
-      
   }
 }

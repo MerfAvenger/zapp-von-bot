@@ -30,7 +30,6 @@ export interface Fleet {
   name: string;
   trophies: string;
   division: string;
-  stars: string;
   numberOfUsers: string;
 }
 

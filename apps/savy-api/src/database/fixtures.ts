@@ -1,46 +1,45 @@
-import pool from "./pool";
-import { GET_ACCOUNT_BY_NAME, INSERT_ACCOUNT } from "./queries/account";
+import { existsSync, readFileSync } from "fs";
+import Logger from "../logger/Logger";
 
-import accounts from "./fixtures/accounts.json";
-import { QueryConfig } from "pg";
-
-if (!accounts || !Array.isArray(accounts)) {
-  throw new Error("Invalid accounts fixture data");
+export interface FixtureData {
+  query: string;
+  values: any[];
 }
 
-function hasAccounts() {
-  const hasAccountQueries = accounts.map((account): QueryConfig => {
-    return {
-      text: GET_ACCOUNT_BY_NAME,
-      values: [account.name],
-    };
-  });
+export async function setupFixtures(
+  tableName: string,
+  fixtures: object
+): Promise<void> {}
 
-  const hasAccountResults = hasAccountQueries.map((hasAccountQueries) => true);
+function parseFixtureToPostgres(
+  tableName: string,
+  fixtures: object
+): FixtureData {
+  const columns = Object.keys(fixtures).join(", ");
+  const placeholders = Object.keys(fixtures)
+    .map((_, index) => `$${index + 1}`)
+    .join(", ");
+  const values = Object.values(fixtures);
+
+  return {
+    query: `INSERT INTO ${tableName} (${columns}) VALUES (${placeholders}) RETURNING *;`,
+    values,
+  };
 }
 
-function setupAccounts() {
-  const queries = accounts.map((account): QueryConfig => {
-    return {
-      text: INSERT_ACCOUNT,
-      values: [account.name, account.email, account.password],
-    };
-  });
+function loadFixturesFromFile(tableName: string): object[] | null {
+  const fixturePath = `${__dirname}/fixtures/${tableName}.json`;
+
+  if (!existsSync(fixturePath)) {
+    Logger.warn(
+      "LoadFixturesFromFile",
+      `No fixture file for table ${tableName}.`
+    );
+    return;
+  }
+
+  const fixtures = readFileSync(fixturePath, { encoding: "utf-8" });
+  return JSON.parse(fixtures);
 }
 
-export default async function setupFixtures(): Promise<void> {
-  await pool
-    .query("BEGIN")
-    .then(() => {
-      const queries = accounts.map(
-        (account) =>
-          `INSERT INTO accounts (name, created_at) VALUES ('${account.name}', NOW())`
-      );
-      return pool.query(queries.join("; "));
-    })
-    .then(() => pool.query("COMMIT"))
-    .catch((error) => {
-      console.error("Error setting up fixtures:", error);
-      return pool.query("ROLLBACK");
-    });
-}
+// function hasFixtures()

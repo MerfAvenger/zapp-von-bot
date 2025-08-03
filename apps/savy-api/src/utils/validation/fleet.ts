@@ -28,11 +28,6 @@ export function isValidFleet(fleet: unknown): fleet is Fleet {
     return false;
   }
 
-  if (typeof testFleet.stars !== "number") {
-    logger.warn("Invalid stars count:", testFleet.stars);
-    return false;
-  }
-
   if (typeof testFleet.numberOfUsers !== "number") {
     logger.warn("Invalid number of users:", testFleet.numberOfUsers);
     return false;
