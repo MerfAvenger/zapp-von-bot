@@ -12,6 +12,12 @@ importers:
       discord.js:
         specifier: ^14.21.0
         version: 14.21.0
+      dotenv:
+        specifier: ^16.6.1
+        version: 16.6.1
+      logger:
+        specifier: workspace:^
+        version: link:../../packages/logger
     devDependencies:
       eslint:
         specifier: ^9.30.1

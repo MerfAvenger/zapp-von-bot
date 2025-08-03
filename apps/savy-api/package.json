@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "rm -rf dist; tsc",
-    "lint": "eslint .--fix",
+    "build": "rm -rf dist; tsc --build tsconfig.build.json",
+    "lint": "eslint . --fix",
     "lint-check": "eslint . ",
     "test": "ts-mocha src/**/*.spec.ts",
     "format": "prettier --write .",
