@@ -2,14 +2,15 @@ export const SAVY_BASE_URL = process.env.SAVY_BASE_URL || null;
 
 export const SAVY_API_ENDPOINTS = {
   device: {
-    deviceLogin: `${SAVY_BASE_URL}/UserService/DeviceLogin11`,
-    userLogin: `${SAVY_BASE_URL}/UserService/UserEmailPasswordAuthorize2`,
+    deviceLogin: `/UserService/DeviceLogin11`,
+    userLogin: `/UserService/UserEmailPasswordAuthorize2`,
   },
   fleet: {
-    getUser: `${SAVY_BASE_URL}/AllianceService/GetUser`,
-    getListUsers: `${SAVY_BASE_URL}/AllianceService/ListUsers`,
-    searchFleets: `${SAVY_BASE_URL}/AllianceService/SearchAlliances`,
-    getTournamentFleets: `${SAVY_BASE_URL}/AllianceService/ListAlliancesWithDivision`,
+    getUser: `/AllianceService/GetUser`,
+    getListUsers: `/AllianceService/ListUsers`,
+    searchFleets: `/AllianceService/SearchAlliances`,
+    getTournamentFleets: `AllianceService/ListAlliancesWithDivision`,
+    getTournamentDivisionFleets: `AllianceService/ListAlliancesByDivision`,
   },
 };
 
@@ -18,5 +19,5 @@ export const buildSavyUrl = (
   params: Record<string, string>
 ): string => {
   const paramsString = new URLSearchParams(params).toString();
-  return `${endpoint}?${paramsString}`;
+  return `${SAVY_BASE_URL}/${endpoint}?${paramsString}`;
 };

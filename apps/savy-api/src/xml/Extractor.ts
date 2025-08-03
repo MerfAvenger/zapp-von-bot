@@ -33,7 +33,7 @@ export default class Extractor {
   extract<TMappedObject>(
     pathNodes: NodePath,
     propertyMap: PropertyMap
-  ): TMappedObject[] | null {
+  ): TMappedObject[] {
     const error = this.#getErrorFromDocument();
 
     if (error) {
@@ -48,13 +48,13 @@ export default class Extractor {
         object = object[pathProperty];
       } else {
         logger.error(`Path "${pathProperty}" not found in XML document.`);
-        return null;
+        return [];
       }
     });
 
     if (!object) {
       logger.warn("No object found at the specified path.");
-      return null;
+      return [];
     }
 
     logger.log(

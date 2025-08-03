@@ -40,9 +40,34 @@ export default class TournamentController {
           return res.status(error.code).json({ error: error.reason });
         }
 
+        logger.error("Internal server error fetching tournament data:", error);
         return res
           .status(500)
           .json({ error: "Internal server error fetching tournament data." });
+      });
+  };
+
+  static isTournamentActive: Handler = (_req, res, _next) => {
+    logger.log("Check if tournament is active request received.");
+
+    TournamentService.isTournamentActive()
+      .then((isActive) => {
+        logger.log("Tournament active status:", isActive);
+        res.status(200).json({ isActive });
+      })
+      .catch((error) => {
+        if (error instanceof SavyAPIError) {
+          logger.error("Failed to check tournament status:", error);
+          return res.status(error.code).json({ error: error.reason });
+        }
+
+        logger.error(
+          "Internal server error checking tournament status:",
+          error
+        );
+        return res
+          .status(500)
+          .json({ error: "Internal server error checking tournament status." });
       });
   };
 }

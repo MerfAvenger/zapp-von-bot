@@ -53,6 +53,7 @@ export default class FleetController {
           return res.status(error.code).json({ error: error.reason });
         }
 
+        logger.error("Internal server error fetching fleet users:", error);
         return res
           .status(500)
           .json({ error: "Internal server error fetching fleet users." });
@@ -81,6 +82,10 @@ export default class FleetController {
           return res.status(error.code).json({ error: error.reason });
         }
 
+        logger.error(
+          "Internal server error fetching filtered fleet users:",
+          error
+        );
         return res.status(500).json({
           error: "Internal server error fetching filtered fleet users.",
         });

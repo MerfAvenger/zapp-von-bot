@@ -81,3 +81,21 @@ export class NoTournamentFleetsError extends SavyAPIError {
     });
   }
 }
+
+export class NotInTournamentError extends SavyAPIError {
+  constructor() {
+    super("There is no tournament currently active.", {
+      code: HTTPCode.NOT_FOUND,
+      reason: "There is no tournament currently active.",
+    });
+  }
+}
+
+export class InvalidDivisionError extends SavyAPIError {
+  constructor(division: string) {
+    super(`Invalid division provided: ${division}.`, {
+      code: HTTPCode.BAD_REQUEST,
+      reason: "The provided division is not valid.",
+    });
+  }
+}
