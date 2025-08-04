@@ -75,7 +75,9 @@ export interface SavyFleet {
 export interface User {
   id: string;
   name: string;
-  trophy: string;
+  trophies: string;
+  currentFleet: string;
+  rank: string;
   lastLogin: string;
   stars: string;
   attacks: string;

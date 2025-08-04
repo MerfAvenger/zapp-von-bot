@@ -23,7 +23,8 @@ services:
       args:
         - PORT=${DISCORD_CLIENT_PORT}
     environment:
-      - SERVER_PORT=${DISCORD_CLIENT_PORT}
+      - SAVY_API_PORT=${SAVY_API_PORT}
+      - SAVY_API_HOST=${SAVY_API_HOST}
     env_file:
       - ./apps/discord-client/.env
     ports:
