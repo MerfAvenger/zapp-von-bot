@@ -99,3 +99,12 @@ export class InvalidDivisionError extends SavyAPIError {
     });
   }
 }
+
+export class UserNotFoundError extends SavyAPIError {
+  constructor(userId: string) {
+    super(`User not found: ${userId}.`, {
+      code: HTTPCode.NOT_FOUND,
+      reason: "The requested user could not be found.",
+    });
+  }
+}

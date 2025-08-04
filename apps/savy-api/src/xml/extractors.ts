@@ -114,7 +114,9 @@ export function extractUsersFromListUsers(response: string): User[] {
   const fields: Record<keyof User, string> = {
     id: "Id",
     name: "Name",
-    trophy: "Trophy",
+    trophies: "Trophy",
+    currentFleet: "AllianceName",
+    rank: "AllianceMembership",
     lastLogin: "LastLoginDate",
     attacks: "TournamentBonusScore",
     stars: "AllianceScore",
@@ -122,6 +124,52 @@ export function extractUsersFromListUsers(response: string): User[] {
 
   return new Extractor(response, ["ListUsers"]).extract<User>(
     ["AllianceService", "ListUsers", "Users", "User"],
+    fields
+  );
+}
+
+export function extractUserFromGetUser(response: string): User {
+  Logger.log("ExtractUserFromGetUser", "Extracting user from response.");
+
+  const fields: Record<keyof User, string> = {
+    id: "Id",
+    name: "Name",
+    trophies: "Trophy",
+    currentFleet: "AllianceName",
+    rank: "AllianceMembership",
+    lastLogin: "LastLoginDate",
+    attacks: "TournamentBonusScore",
+    stars: "AllianceScore",
+  };
+
+  const users = new Extractor(response, ["GetUser"]).extract<User>(
+    ["UserService", "GetUser", "User"],
+    fields
+  );
+
+  if (users.length === 0) {
+    throw new Error("No user found in response.");
+  }
+
+  return users[0];
+}
+
+export function extractUsersFromSearchUsers(response: string): User[] {
+  Logger.log("ExtractUsersFromSearchUsers", "Extracting users from response.");
+
+  const fields: Record<keyof User, string> = {
+    id: "Id",
+    name: "Name",
+    trophies: "Trophy",
+    currentFleet: "AllianceName",
+    rank: "AllianceMembership",
+    lastLogin: "LastLoginDate",
+    attacks: "TournamentBonusScore",
+    stars: "AllianceScore",
+  };
+
+  return new Extractor(response, ["SearchUsers"]).extract<User>(
+    ["UserService", "SearchUsers", "Users", "User"],
     fields
   );
 }

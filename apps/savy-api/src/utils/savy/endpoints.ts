@@ -12,6 +12,10 @@ export const SAVY_API_ENDPOINTS = {
     getTournamentFleets: `AllianceService/ListAlliancesWithDivision`,
     getTournamentDivisionFleets: `AllianceService/ListAlliancesByDivision`,
   },
+  user: {
+    getUserById: `/UserService/GetUser`,
+    searchUsers: `UserService/SearchUsers`,
+  },
 };
 
 export const buildSavyUrl = (

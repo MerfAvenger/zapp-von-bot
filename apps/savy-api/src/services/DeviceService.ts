@@ -33,16 +33,19 @@ const logger = Logger.createWrapper("DeviceService");
 
 export default class DeviceService {
   static async getDevice(): Promise<Device | null> {
-    const deviceData = (
-      await makeQuery<DeviceData>(pool, GET_DEVICES, [], isValidDeviceData)
-    )[0];
+    const deviceData = await makeQuery<DeviceData>(
+      pool,
+      GET_DEVICES,
+      [],
+      isValidDeviceData
+    );
 
-    if (!deviceData) {
+    if (!deviceData?.[0]) {
       logger.warn("No device found in the database.");
       return null;
     }
 
-    const device = mapDeviceDataToDevice(deviceData);
+    const device = mapDeviceDataToDevice(deviceData[0]);
 
     logger.log("Device found:", device);
     return device;
