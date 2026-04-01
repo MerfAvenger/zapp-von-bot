@@ -22,17 +22,17 @@ app.on("error", (err) => {
   process.exit(1);
 });
 
-app.on("uncaughtException", (err) => {
+process.on("uncaughtException", (err) => {
   logger.error("Uncaught exception:", err);
   process.exit(1);
 });
 
-app.on("SIGINT", () => {
+process.on("SIGINT", () => {
   logger.log("[SIGINT] Server shutting down...");
   process.exit(0);
 });
 
-app.on("SIGTERM", () => {
+process.on("SIGTERM", () => {
   logger.log("[SIGTERM] Server shutting down...");
   process.exit(0);
 });
