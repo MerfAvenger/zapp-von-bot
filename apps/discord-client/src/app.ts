@@ -3,12 +3,14 @@ import {
   Client,
   Events,
   GatewayIntentBits,
+  MessageFlags,
   Partials,
 } from "discord.js";
 import Logger from "logger";
 import config from "./config";
 import deployCommands from "./command/deploy";
 import commands, { commandData } from "./command/commands";
+import { buildErrorEmbed, isApplicationError } from "./error/errors";
 
 const client = new Client({
   intents: [
@@ -57,14 +59,21 @@ client.on(Events.InteractionCreate, async (interaction) => {
     }
   } catch (error) {
     Logger.error("CommandHandler", "Error handling command.", error);
+    const embeds = [];
+    if (isApplicationError(error) && error.isPublic) {
+      embeds.push(buildErrorEmbed(error));
+    }
+
     if (interaction.deferred || interaction.replied) {
       await interaction.editReply({
         content: "An error occurred while executing the command.",
+        embeds,
       });
     } else {
       await interaction.reply({
         content: "An error occurred while executing the command.",
-        ephemeral: true,
+        embeds,
+        flags: [MessageFlags.Ephemeral],
       });
     }
   }

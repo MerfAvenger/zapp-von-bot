@@ -10,10 +10,7 @@ import {
   UPDATE_DEVICE,
 } from "../database/queries/device";
 import { makeQuery } from "../database/query";
-import {
-  isValidDeviceAuthentication,
-  isValidDeviceData,
-} from "../utils/validation/device";
+import { isValidDeviceData } from "../utils/validation/device";
 import {
   mapDeviceDataToDevice,
   mapDeviceToDeviceData,
@@ -25,7 +22,6 @@ import {
 } from "../utils/savy/device";
 import Logger from "logger";
 import { buildSavyUrl, SAVY_API_ENDPOINTS } from "../utils/savy/endpoints";
-import Extractor from "../xml/Extractor";
 import { DeviceAuthenticationError } from "../errors/SavyAPIError";
 import { extractDeviceAuthentication } from "../xml/extractors";
 
@@ -37,7 +33,7 @@ export default class DeviceService {
       pool,
       GET_DEVICES,
       [],
-      isValidDeviceData
+      isValidDeviceData,
     );
 
     if (!deviceData?.[0]) {
@@ -59,7 +55,7 @@ export default class DeviceService {
         pool,
         INSERT_DEVICE,
         [deviceKey],
-        isValidDeviceData
+        isValidDeviceData,
       )
     )[0];
 
@@ -81,7 +77,7 @@ export default class DeviceService {
         pool,
         UPDATE_DEVICE,
         [deviceData.access_token, deviceData.last_login, deviceData.device_key],
-        isValidDeviceData
+        isValidDeviceData,
       )
     )[0];
 
@@ -105,7 +101,7 @@ export default class DeviceService {
       .then(async (res) => {
         if (!res.ok) {
           throw new DeviceAuthenticationError(
-            `Error authenticating device: ${res.statusText}`
+            `Error authenticating device: ${res.statusText}`,
           );
         }
         return await res.text();
@@ -113,7 +109,7 @@ export default class DeviceService {
       .catch((error) => {
         throw new DeviceAuthenticationError(
           `Failed to authenticate device: ${error.message}`,
-          { trace: error.stack }
+          { trace: error.stack },
         );
       });
 
@@ -149,7 +145,7 @@ export default class DeviceService {
   static async authenticatedFetch<TResponseData>(
     endpointUrl: string,
     params: Record<string, string>,
-    extractionCallback: (response: string) => TResponseData
+    extractionCallback: (response: string) => TResponseData,
   ): Promise<TResponseData> {
     const device = await this.getActiveDevice();
     const url = buildSavyUrl(endpointUrl, {
@@ -164,7 +160,7 @@ export default class DeviceService {
       .then(async (res) => {
         if (!res.ok) {
           throw new DeviceAuthenticationError(
-            `Error making authenticated request: ${res.statusText}`
+            `Error making authenticated request: ${res.statusText}`,
           );
         }
         return await res.text();
@@ -172,7 +168,7 @@ export default class DeviceService {
       .catch((error) => {
         throw new DeviceAuthenticationError(
           `Failed to make authenticated request: ${error.message}`,
-          { trace: error.stack }
+          { trace: error.stack },
         );
       });
 

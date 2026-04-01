@@ -30,6 +30,10 @@ ARG PORT=8083
 RUN addgroup nodegroup --system --gid 101
 RUN adduser nodeuser --ingroup nodegroup --system --uid 101
 
+# Create runtime directory with correct permissions
+RUN mkdir -p /apps/discord-client/runtime && \
+    chown -R 101:101 /apps/discord-client/runtime
+
 USER 101:101
 
 COPY --from=build /apps/discord-client .

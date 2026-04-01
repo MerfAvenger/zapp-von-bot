@@ -15,6 +15,7 @@ services:
       - ./apps/savy-api/.env
     ports:
       - 8080:${SAVY_API_PORT}
+    stop_grace_period: 5s
   discord-client:
     build:
       context: ./
@@ -27,8 +28,11 @@ services:
       - SAVY_API_HOST=${SAVY_API_HOST}
     env_file:
       - ./apps/discord-client/.env
+    volumes:
+      - ${DISCORD_RUNTIME_FOLDER:-./apps/discord-client/runtime}:/apps/discord-client/runtime:z
     ports:
       - 8083:${DISCORD_CLIENT_PORT}
+    stop_grace_period: 5s
   database:
     build:
       context: ./database

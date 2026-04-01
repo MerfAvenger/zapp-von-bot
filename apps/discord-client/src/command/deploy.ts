@@ -1,9 +1,7 @@
 import { REST, Routes } from "discord.js";
-import userCommands from "./commands/users/users";
 import Logger from "logger";
 import config from "../config";
-
-const commands = [userCommands.data];
+import { commandData } from "./commands";
 
 const logger = Logger.createWrapper("DeployCommands");
 const rest = new REST().setToken(config.token);
@@ -11,10 +9,10 @@ const rest = new REST().setToken(config.token);
 export default async function deployCommands() {
   logger.log(
     "Deploying commands...",
-    commands.map((cmd) => cmd.toJSON())
+    commandData.map((cmd) => cmd.toJSON()),
   );
 
   await rest.put(Routes.applicationCommands(config.clientId), {
-    body: commands,
+    body: commandData.map((cmd) => cmd.toJSON()),
   });
 }

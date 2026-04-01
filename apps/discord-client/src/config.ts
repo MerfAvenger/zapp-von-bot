@@ -17,7 +17,7 @@ if (!DISCORD_CLIENT_ID) {
 const DISCORD_CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET || "";
 if (!DISCORD_CLIENT_SECRET) {
   throw new Error(
-    "DISCORD_CLIENT_SECRET is not set in the environment variables."
+    "DISCORD_CLIENT_SECRET is not set in the environment variables.",
   );
 }
 
@@ -34,12 +34,18 @@ if (!SAVY_API_PORT) {
 const SAVY_API_URL =
   "http://" + process.env.SAVY_API_HOST + ":" + process.env.SAVY_API_PORT;
 
+const SETTINGS_PATH = process.env.SETTINGS_PATH;
+if (!SETTINGS_PATH) {
+  throw new Error("SETTINGS_PATH is not set in the environment variables.");
+}
+
 export default {
   port: DISCORD_CLIENT_PORT,
   token: DISCORD_BOT_TOKEN,
   clientId: DISCORD_CLIENT_ID,
   clientSecret: DISCORD_CLIENT_SECRET,
   savyAPIURL: SAVY_API_URL,
+  settingsPath: SETTINGS_PATH,
   style: {
     defaultEmbedColour: process.env.DEFAULT_EMBED_COLOUR || "#b01818",
     errorEmbedColour: process.env.ERROR_EMBED_COLOUR || "#fdc22bff",

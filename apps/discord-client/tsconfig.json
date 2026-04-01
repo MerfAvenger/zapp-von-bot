@@ -8,5 +8,5 @@
     "resolveJsonModule": true,
     "outDir": "dist"
   },
-  "include": ["src"]
+  "include": ["src", "tsconfig.build.json"]
 }

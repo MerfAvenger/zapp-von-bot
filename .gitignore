@@ -11,3 +11,6 @@
 .env
 
 **/fixtures/*.json
+
+# Runtime folders
+apps/discord-client/runtime/
