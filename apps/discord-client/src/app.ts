@@ -3,18 +3,24 @@ import {
   Client,
   Events,
   GatewayIntentBits,
+  Partials,
 } from "discord.js";
 import Logger from "logger";
 import config from "./config";
-import userCommand from "./command/commands/users/users";
 import deployCommands from "./command/deploy";
+import commands, { commandData } from "./command/commands";
 
 const client = new Client({
   intents: [
+    GatewayIntentBits.DirectMessages,
     GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMembers,
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.MessageContent,
-    GatewayIntentBits.GuildMembers,
+  ],
+  partials: [
+    Partials.Channel, // Without this, DM channels aren't cached and messages are dropped
+    Partials.Message, // Recommended too — ensures DM messages aren't treated as partial/empty
   ],
 });
 
@@ -39,17 +45,41 @@ client.on(Events.InteractionCreate, async (interaction) => {
   const command = interaction.commandName;
   Logger.log("OnInteractionCreate", `Received command: ${command}`);
 
-  switch (command) {
-    case "users":
-      await userCommand.handler(interaction);
-      break;
-    default:
+  try {
+    const commandModule = commands.find((cmd) => cmd.data.name === command);
+    if (commandModule) {
+      await commandModule.handler(interaction);
+    } else {
       await interaction.reply({
         content: "Unknown command.",
         ephemeral: true,
       });
-      break;
+    }
+  } catch (error) {
+    Logger.error("CommandHandler", "Error handling command.", error);
+    if (interaction.deferred || interaction.replied) {
+      await interaction.editReply({
+        content: "An error occurred while executing the command.",
+      });
+    } else {
+      await interaction.reply({
+        content: "An error occurred while executing the command.",
+        ephemeral: true,
+      });
+    }
   }
+});
+
+process.on("SIGTERM", () => {
+  Logger.log("SIGTERM", "Shutting down...");
+  client.destroy();
+  process.exit(0);
+});
+
+process.on("SIGINT", () => {
+  Logger.log("SIGINT", "Shutting down...");
+  client.destroy();
+  process.exit(0);
 });
 
 client.login(config.token).catch((error) => {
