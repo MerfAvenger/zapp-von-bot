@@ -13,6 +13,9 @@ export interface ApplicationSettings {
 
 const logger = Logger.createWrapper("Settings");
 
+// In-memory cache to avoid repeated disk reads
+let settingsCache: ApplicationSettings | null = null;
+
 function createRuntimeDirectory(filePath: string): void {
   const dir = path.dirname(filePath);
   if (!fs.existsSync(dir)) {
@@ -33,6 +36,9 @@ export function saveSettings(settings: ApplicationSettings): void {
     config.settingsPath,
     JSON.stringify(serialisedSettings, null, 2),
   );
+
+  // Update cache after saving
+  settingsCache = settings;
 
   logger.log("Settings saved successfully.");
 }
@@ -59,6 +65,12 @@ export function createSettings(): ApplicationSettings {
 }
 
 export function loadApplicationSettings(): ApplicationSettings {
+  // Return cached settings if available
+  if (settingsCache !== null) {
+    logger.info("Loading application settings from cache.");
+    return settingsCache;
+  }
+
   logger.log("Loading application settings from file...");
 
   if (!fs.existsSync(config.settingsPath)) {
@@ -86,6 +98,9 @@ export function loadApplicationSettings(): ApplicationSettings {
   };
 
   validateApplicationSettings(deserialisedSettings);
+
+  // Cache the loaded settings
+  settingsCache = deserialisedSettings;
 
   logger.info(
     "Application settings loaded successfully:",
@@ -131,4 +146,13 @@ export function validateApplicationSettings(
 
     return settingsData;
   }
+}
+
+/**
+ * Invalidates the settings cache, forcing the next call to loadApplicationSettings to read from disk.
+ * Useful for testing or if external processes modify the settings file.
+ */
+export function invalidateSettingsCache(): void {
+  logger.info("Invalidating settings cache.");
+  settingsCache = null;
 }
