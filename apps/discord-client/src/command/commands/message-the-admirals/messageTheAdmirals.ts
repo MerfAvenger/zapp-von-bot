@@ -3,25 +3,27 @@ import {
   DMChannel,
   EmbedBuilder,
   Message,
+  MessageCreateOptions,
   MessageFlags,
   SlashCommandBuilder,
-  TextBasedChannel,
+  Snowflake,
   TextChannel,
   User,
 } from "discord.js";
 import Logger from "logger";
+import { MissingConfigurationError } from "../../../error/errors";
+import { loadSettingsForServer } from "../../../settings/server";
 import {
-  FailedToSendDMError,
-  MissingConfigurationError,
-} from "../../../error/errors";
-import { loadSettings } from "../../../settings/settings";
+  createDirectMessageChannel,
+  sendDirectMessage,
+} from "../../../message/utils";
 
 const data = new SlashCommandBuilder()
   .setName("message-the-admirals")
   .setDescription("Privately send a message to the leadership team.");
 
 const handler = async (interaction: ChatInputCommandInteraction) => {
-  const forwardChannelId = getForwardChannelId();
+  const forwardChannelId = getForwardChannelId(interaction.guildId);
 
   await interaction.deferReply({ flags: [MessageFlags.Ephemeral] });
 
@@ -30,16 +32,24 @@ const handler = async (interaction: ChatInputCommandInteraction) => {
     "Received command to message the admirals.",
   );
 
-  const directMessage = await openDM(interaction);
-  const userResponse = await collectUserMessage(directMessage, interaction);
+  const channel = await createDirectMessageChannel(interaction);
+
+  const instructionsMessage = buildInstructionsMessage(interaction.user);
+  await sendDirectMessage(channel, instructionsMessage).then(async () => {
+    await interaction.editReply({
+      content:
+        "Reply to the message in your DMs to send a message to the admirals.",
+    });
+  });
+  const userResponse = await collectUserMessage(channel, interaction);
 
   if (userResponse) {
     await forwardResponseToChannel(interaction, userResponse, forwardChannelId);
   }
 };
 
-function getForwardChannelId(): string {
-  const { channelId } = loadSettings().messageTheAdmirals;
+function getForwardChannelId(guildId: Snowflake): string {
+  const { channelId } = loadSettingsForServer(guildId).messageTheAdmirals;
 
   if (!channelId) {
     Logger.error(
@@ -53,42 +63,13 @@ function getForwardChannelId(): string {
 }
 
 /**
- * Opens a DM channel with the user and sends them instructions on how to message the leadership team.
+ * Send the user's response to the private message-the-admirals channel.
  *
- * @param interaction The discord interaction object.
- * @returns The direct message channel or throws if failed.
+ * @param originalInteraction The command the user sent originally.
+ * @param responseMessage  The DM the bot sent to the user as a reply.
+ * @param forwardChannelId The channel ID of the forwarding destination.
+ * @returns
  */
-async function openDM(
-  interaction: ChatInputCommandInteraction,
-): Promise<DMChannel> {
-  const user = interaction.user;
-  const directMessage = await user.createDM();
-
-  await directMessage
-    .send(buildInstructionsMessage(user))
-    .then(async () => {
-      await interaction.editReply({
-        content:
-          "Reply to the message in your DMs to send a message to the admirals.",
-      });
-    })
-    .catch(async (error) => {
-      Logger.error(
-        "MessageTheAdmiralsCommand",
-        "Failed to send DM to user:",
-        error,
-      );
-      await interaction.editReply({
-        content:
-          "I couldn't send you a direct message. Please check your privacy settings and try again.",
-      });
-
-      throw new FailedToSendDMError(user, error);
-    });
-
-  return directMessage;
-}
-
 async function forwardResponseToChannel(
   originalInteraction: ChatInputCommandInteraction,
   responseMessage: Message,
@@ -143,11 +124,11 @@ async function collectUserMessage(
   return collected.first();
 }
 
-function buildInstructionsMessage(user: User) {
+function buildInstructionsMessage(user: User): MessageCreateOptions {
   const message = `
-Hello @${user.tag}! 
-  
-Please send me a message with your question or feedback for the leadership team. They will get back to you as soon as possible.
+    Hello @${user.tag}! 
+      
+    Please send me a message with your question or feedback for the leadership team. They will get back to you as soon as possible.
   `;
   return {
     content: message,

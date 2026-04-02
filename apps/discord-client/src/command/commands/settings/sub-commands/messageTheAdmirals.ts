@@ -3,7 +3,11 @@ import {
   SlashCommandSubcommandBuilder,
 } from "discord.js";
 import Logger from "logger";
-import { loadSettings, saveSettings } from "../../../../settings/settings";
+import {
+  loadSettingsForServer,
+  updateSettingsForServer,
+} from "../../../../settings/server";
+import { assertHasRequiredPermissions } from "../../../utils";
 
 export const data = new SlashCommandSubcommandBuilder()
   .setName("message-the-admirals")
@@ -23,10 +27,11 @@ const handler = async (interaction: ChatInputCommandInteraction) => {
     `User "${interaction.user.username}" configured the inbox channel: ${channelIdInput.name} [${channelIdInput.id}]`,
   );
 
-  const settings = loadSettings();
-  settings.messageTheAdmirals.channelId = channelIdInput.id;
-
-  saveSettings(settings);
+  updateSettingsForServer(interaction.guildId, {
+    messageTheAdmirals: {
+      channelId: channelIdInput.id,
+    },
+  });
 
   await interaction.editReply({
     content: `The channel for the message the admirals command has been set to <#${channelIdInput.id}>.`,

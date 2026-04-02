@@ -39,11 +39,24 @@ if (!SETTINGS_PATH) {
   throw new Error("SETTINGS_PATH is not set in the environment variables.");
 }
 
+const loadAdminList = (): string[] => {
+  const admins = process.env.BOT_ADMINS;
+  if (!admins) {
+    throw new Error("BOT_ADMINS is not set in the environment variables.");
+  }
+
+  let parsedAdmins = admins.split(",").map((admin) => admin.trim());
+  return parsedAdmins;
+};
+
+const BOT_ADMINS = loadAdminList();
+
 export default {
   port: DISCORD_CLIENT_PORT,
   token: DISCORD_BOT_TOKEN,
   clientId: DISCORD_CLIENT_ID,
   clientSecret: DISCORD_CLIENT_SECRET,
+  botAdmins: BOT_ADMINS,
   savyAPIURL: SAVY_API_URL,
   settingsPath: SETTINGS_PATH,
   style: {
