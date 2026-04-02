@@ -71,16 +71,14 @@ export default class Logger {
     );
 
     if (objectifiable.length > 0) {
-      console.log(
-        `${COLOURS.log}${tag}${COLOURS.reset}`,
-        inspect(objectifiable),
-      );
+      const stringifiedObjects = inspect(objectifiable);
+      console.log(`${COLOURS.log}${tag} ${stringifiedObjects}${COLOURS.reset}`);
     }
 
     if (errorifiable.length > 0) {
       for (const error of errorifiable) {
         if (error) {
-          console.error(`${COLOURS.error}${tag}${COLOURS.reset}`, error);
+          console.error(`${COLOURS.error}${tag} ${error}${COLOURS.reset}`);
         }
       }
     }
@@ -101,16 +99,16 @@ export default class Logger {
     );
 
     if (objectifiable.length > 0) {
+      const stringifiedObjects = inspect(objectifiable);
       console.log(
-        `${COLOURS.info}${tag}${COLOURS.reset}`,
-        inspect(objectifiable),
+        `${COLOURS.info}${tag} ${stringifiedObjects}${COLOURS.reset}`,
       );
     }
 
     if (errorifiable.length > 0) {
       for (const error of errorifiable) {
         if (error) {
-          console.error(`${COLOURS.error}${tag}${COLOURS.reset}`, error);
+          console.error(`${COLOURS.error}${tag} ${error}${COLOURS.reset}`);
         }
       }
     }
@@ -131,16 +129,16 @@ export default class Logger {
     );
 
     if (objectifiable.length > 0) {
+      const stringifiedObjects = inspect(objectifiable);
       console.warn(
-        `${COLOURS.warn}${tag}${COLOURS.reset}`,
-        inspect(objectifiable),
+        `${COLOURS.warn}${tag} ${stringifiedObjects}${COLOURS.reset}`,
       );
     }
 
     if (errorifiable.length > 0) {
       for (const error of errorifiable) {
         if (error) {
-          console.error(`${COLOURS.error}${tag}${COLOURS.reset}`, error);
+          console.error(`${COLOURS.error}${tag} ${error}${COLOURS.reset}`);
         }
       }
     }
@@ -161,16 +159,16 @@ export default class Logger {
     );
 
     if (objectifiable.length > 0) {
+      const stringifiedObjects = inspect(objectifiable);
       console.error(
-        `${COLOURS.error}${tag}${COLOURS.reset}`,
-        inspect(objectifiable),
+        `${COLOURS.error}${tag} ${stringifiedObjects}${COLOURS.reset}`,
       );
     }
 
     if (errorifiable.length > 0) {
       for (const error of errorifiable) {
         if (error) {
-          console.error(`${COLOURS.error}${tag}${COLOURS.reset}`, error);
+          console.error(`${COLOURS.error}${tag} ${error}${COLOURS.reset}`);
         }
       }
     }
