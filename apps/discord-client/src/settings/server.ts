@@ -18,7 +18,7 @@ export interface ServerSettings {
 const logger = Logger.createWrapper("ServerSettings");
 
 export function createServerSettings(): ServerSettings {
-  logger.log("Creating default server settings...");
+  logger.info("Creating default server settings...");
 
   const settings: ServerSettings = {
     messageTheAdmirals: {
@@ -29,7 +29,7 @@ export function createServerSettings(): ServerSettings {
     },
   };
 
-  logger.log("Default server settings created:", settings);
+  logger.info("Default server settings created:", settings);
   return settings;
 }
 
@@ -47,7 +47,7 @@ export function recoverValidServerSettings(
     if (typeof settings.messageTheAdmirals.channelId === "string") {
       recoveredSettings.messageTheAdmirals.channelId =
         settings.messageTheAdmirals.channelId;
-      logger.log(
+      logger.info(
         "Recovered valid messageTheAdmirals settings:",
         recoveredSettings.messageTheAdmirals,
       );
@@ -56,7 +56,7 @@ export function recoverValidServerSettings(
     if (typeof settings.permissions?.configureSettings === "string") {
       recoveredSettings.permissions.configureSettings =
         settings.permissions.configureSettings;
-      logger.log(
+      logger.info(
         "Recovered valid permissions settings:",
         recoveredSettings.permissions,
       );
@@ -107,7 +107,7 @@ export function resetServerSettings(serverId: Snowflake): ServerSettings {
   const defaultSettings = createServerSettings();
   saveServerSettings(serverId, defaultSettings);
 
-  logger.log(
+  logger.info(
     `Settings for server ${serverId} have been reset:`,
     defaultSettings,
   );
@@ -118,7 +118,7 @@ export function saveServerSettings(
   serverId: Snowflake,
   serverSettings: ServerSettings,
 ): void {
-  logger.log(`Saving settings for server ${serverId}:`, serverSettings);
+  logger.info(`Saving settings for server ${serverId}:`, serverSettings);
 
   const settings = loadApplicationSettings();
   settings.servers.set(serverId, serverSettings);
@@ -131,7 +131,7 @@ export function updateSettingsForServer(
   serverId: Snowflake,
   newSettings: Partial<ServerSettings>,
 ): ServerSettings {
-  logger.log(
+  logger.info(
     `Updating settings for server ${serverId} with new settings:`,
     newSettings,
   );
@@ -153,7 +153,10 @@ export function updateSettingsForServer(
 
   saveServerSettings(serverId, updatedServerSettings);
 
-  logger.log(`Updated settings for server ${serverId}:`, updatedServerSettings);
+  logger.info(
+    `Updated settings for server ${serverId}:`,
+    updatedServerSettings,
+  );
   return updatedServerSettings;
 }
 
@@ -181,14 +184,14 @@ export function loadSettingsForServer(serverId: Snowflake): ServerSettings {
     const recoveredSettings = recoverValidServerSettings(existingSettings);
     saveServerSettings(serverId, recoveredSettings);
 
-    logger.log(
+    logger.info(
       `Recovered settings for server ${serverId} saved successfully:`,
       recoveredSettings,
     );
     return recoveredSettings;
   }
 
-  logger.log(
+  logger.info(
     `Settings for server ${serverId} loaded successfully:`,
     existingSettings,
   );

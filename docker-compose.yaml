@@ -11,6 +11,7 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
       - SERVER_PORT=${SAVY_API_PORT}
+      - FORCE_COLOR=1
     env_file:
       - ./apps/savy-api/.env
     ports:
@@ -26,6 +27,7 @@ services:
     environment:
       - SAVY_API_PORT=${SAVY_API_PORT}
       - SAVY_API_HOST=${SAVY_API_HOST}
+      - FORCE_COLOR=1
     env_file:
       - ./apps/discord-client/.env
     volumes:

@@ -17,12 +17,12 @@ function createRuntimeDirectory(filePath: string): void {
   const dir = path.dirname(filePath);
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
-    logger.log(`Created runtime directory: ${dir}`);
+    logger.info(`Created runtime directory: ${dir}`);
   }
 }
 
 export function saveSettings(settings: ApplicationSettings): void {
-  logger.log(`Saving settings to file at ${config.settingsPath}:`, settings);
+  logger.info(`Saving settings to file at ${config.settingsPath}:`, settings);
   createRuntimeDirectory(config.settingsPath);
 
   let serialisedSettings = {
@@ -38,7 +38,7 @@ export function saveSettings(settings: ApplicationSettings): void {
 }
 
 export function createSettings(): ApplicationSettings {
-  logger.log("Creating default application settings...");
+  logger.info("Creating default application settings...");
   const serverSettings: ApplicationServerSettings = new Map<
     Snowflake,
     ServerSettings
@@ -51,7 +51,7 @@ export function createSettings(): ApplicationSettings {
 
   saveSettings(applicationSettings);
 
-  logger.log(
+  logger.info(
     "Default application settings created and saved:",
     applicationSettings,
   );
@@ -87,7 +87,10 @@ export function loadApplicationSettings(): ApplicationSettings {
 
   validateApplicationSettings(deserialisedSettings);
 
-  logger.log("Application settings loaded successfully:", deserialisedSettings);
+  logger.info(
+    "Application settings loaded successfully:",
+    deserialisedSettings,
+  );
   return deserialisedSettings;
 }
 

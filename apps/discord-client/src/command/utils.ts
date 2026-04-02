@@ -21,7 +21,7 @@ export function hasRequiredPermissions(
       .fetch(user.id)
       .then((member) => {
         if (member.id === guild.ownerId || isBotAdmin(member.id)) {
-          Logger.log(
+          Logger.info(
             "PermissionCheck",
             `User "${user.username}" [${user.id}] is the server owner or a bot admin and has super user permissions.`,
           );
@@ -29,7 +29,7 @@ export function hasRequiredPermissions(
         }
 
         if (authorisedRoles?.some((roleId) => member.roles.cache.has(roleId))) {
-          Logger.log(
+          Logger.info(
             "PermissionCheck",
             `User "${user.username}" [${user.id}] has required permissions via configured roles.`,
           );
