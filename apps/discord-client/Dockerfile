@@ -1,4 +1,4 @@
-FROM node:lts-alpine3.20 AS base
+FROM node:lts-alpine AS base
 
 
 FROM base AS prepare
