@@ -18,15 +18,15 @@ export function isApplicationError(error: unknown): error is ApplicationError {
 
   let testError = error as ApplicationError;
 
-  if (!Object.hasOwn(testError, "isPublic")) {
+  if (!testError.name || typeof testError.name !== "string") {
     return false;
   }
 
-  if (!Object.hasOwn(testError, "name")) {
-    return false;
-  }
-
-  if (!Object.hasOwn(testError, "name")) {
+  const isPublicDescriptor = Object.getOwnPropertyDescriptor(
+    Object.getPrototypeOf(testError),
+    "isPublic",
+  );
+  if (!isPublicDescriptor || !isPublicDescriptor.get) {
     return false;
   }
 
