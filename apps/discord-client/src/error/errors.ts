@@ -95,3 +95,13 @@ export class PermissionDeniedError extends ApplicationError {
     this.publicDescription = `You do not have permission to use this command.`;
   }
 }
+
+export class CommandDeploymentError extends ApplicationError {
+  constructor(command: string, originalError: Error) {
+    super(
+      `Failed to deploy command "${command}". Original error: ${originalError.message}`,
+    );
+    this.name = "CommandDeploymentError";
+    this.publicDescription = `An error occurred while deploying the command "${command}". Please contact an admin.`;
+  }
+}
