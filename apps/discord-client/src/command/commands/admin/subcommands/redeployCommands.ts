@@ -3,7 +3,6 @@ import {
   SlashCommandSubcommandBuilder,
 } from "discord.js";
 import Logger from "logger";
-import { clearCommands } from "../../../clean";
 import deployCommands from "../../../deploy";
 
 export const data = new SlashCommandSubcommandBuilder()
@@ -11,7 +10,6 @@ export const data = new SlashCommandSubcommandBuilder()
   .setDescription("Nuke the bot commands and redeploy them afresh.");
 
 const handler = async (interaction: ChatInputCommandInteraction) => {
-  await clearCommands();
   await deployCommands();
 
   Logger.log(
