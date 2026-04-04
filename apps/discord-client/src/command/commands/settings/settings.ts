@@ -4,7 +4,7 @@ import {
   SlashCommandBuilder,
 } from "discord.js";
 
-import messageTheAdmirals from "./sub-commands/messageTheAdmirals";
+import messageTheAdmirals from "./sub-commands/inbox";
 import resetCommand from "./sub-commands/reset";
 import adminRoleCommand from "./sub-commands/adminRole";
 

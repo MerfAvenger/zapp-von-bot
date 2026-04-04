@@ -3,19 +3,17 @@ import {
   SlashCommandSubcommandBuilder,
 } from "discord.js";
 import Logger from "logger";
-import {
-  loadSettingsForServer,
-  updateSettingsForServer,
-} from "../../../../settings/server";
-import { assertHasRequiredPermissions } from "../../../utils";
+import { updateSettingsForServer } from "../../../../settings/server";
 
 export const data = new SlashCommandSubcommandBuilder()
-  .setName("message-the-admirals")
-  .setDescription("Configure settings for the message the admirals command.")
+  .setName("inbox")
+  .setDescription(
+    "Configure the inbox channel for the message the admirals command.",
+  )
   .addChannelOption((option) =>
     option
       .setName("channel")
-      .setDescription("The channel to forward user's messages to leadership.")
+      .setDescription("The channel to forward user's messages to.")
       .setRequired(true),
   );
 
@@ -23,7 +21,7 @@ const handler = async (interaction: ChatInputCommandInteraction) => {
   const channelIdInput = interaction.options.getChannel("channel", true);
 
   Logger.log(
-    "MessageTheAdmiralsCommand",
+    "SettingsInboxCommand",
     `User "${interaction.user.username}" configured the inbox channel: ${channelIdInput.name} [${channelIdInput.id}]`,
   );
 

@@ -5,7 +5,7 @@ import userCommands from "./commands/users/users";
 export const commandData = [
   settings.data,
   messageTheAdmiralsCommand.data,
-  userCommands.data,
+  // userCommands.data,
 ];
 
 export default [settings, messageTheAdmiralsCommand, userCommands];
