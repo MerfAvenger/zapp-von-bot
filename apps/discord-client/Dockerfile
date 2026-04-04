@@ -15,7 +15,7 @@ WORKDIR /build
 
 COPY . .
 RUN --mount=type=cache,id=pnpm,target=/root/.local/share/pnpm/store pnpm install --frozen-lockfile
-RUN pnpm -r build
+RUN pnpm RUN pnpm -r --filter discord-client... build-r build
 
 RUN pnpm deploy --filter=discord-client --prod /apps/discord-client
 

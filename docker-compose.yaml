@@ -1,6 +1,6 @@
 services:
   savy-api:
-    image: savy-api
+    image: localhost/savy-api:latest
     build:
       context: ./
       dockerfile: ./apps/savy-api/Dockerfile
@@ -19,7 +19,7 @@ services:
       - 8080:${SAVY_API_PORT}
     stop_grace_period: 5s
   discord-client:
-    image: discord-client
+    image: localhost/discord-client:latest
     build:
       context: ./
       dockerfile: ./apps/discord-client/Dockerfile
