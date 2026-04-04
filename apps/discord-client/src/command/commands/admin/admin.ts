@@ -22,13 +22,8 @@ subCommands.forEach((cmd) => {
 });
 
 const handler = async (interaction: ChatInputCommandInteraction) => {
-  const { configureSettings } = loadSettingsForServer(
-    interaction.guildId,
-  ).permissions;
-
-  assertHasRequiredPermissions(interaction.guild, interaction.user, [
-    configureSettings,
-  ]);
+  const { adminRoles } = loadSettingsForServer(interaction.guildId).permissions;
+  assertHasRequiredPermissions(interaction.guild, interaction.user, adminRoles);
 
   const subCommand = interaction.options.getSubcommand();
 

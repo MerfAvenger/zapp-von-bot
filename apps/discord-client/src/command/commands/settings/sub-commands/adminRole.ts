@@ -3,7 +3,10 @@ import {
   SlashCommandSubcommandBuilder,
 } from "discord.js";
 import { assertHasRequiredPermissions } from "../../../utils";
-import { updateSettingsForServer } from "../../../../settings/server";
+import {
+  loadSettingsForServer,
+  updateSettingsForServer,
+} from "../../../../settings/server";
 
 export const data = new SlashCommandSubcommandBuilder()
   .setName("admin-role")
@@ -16,13 +19,18 @@ export const data = new SlashCommandSubcommandBuilder()
   );
 
 const handler = async (interaction: ChatInputCommandInteraction) => {
-  assertHasRequiredPermissions(interaction.guild, interaction.user);
+  const settings = loadSettingsForServer(interaction.guildId);
+  assertHasRequiredPermissions(
+    interaction.guild,
+    interaction.user,
+    settings.permissions.adminRoles,
+  );
 
   const roleIdInput = interaction.options.getRole("role", true);
 
   updateSettingsForServer(interaction.guildId, {
     permissions: {
-      configureSettings: roleIdInput.id,
+      adminRoles: [...settings.permissions.adminRoles, roleIdInput.id],
     },
   });
 

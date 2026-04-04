@@ -7,7 +7,7 @@ export interface MessageTheAdmiralsSettings {
 }
 
 export interface PermissionsSettings {
-  configureSettings: Snowflake | null;
+  adminRoles: Snowflake[];
 }
 
 export interface ServerSettings {
@@ -25,7 +25,7 @@ export function createServerSettings(): ServerSettings {
       channelId: null,
     },
     permissions: {
-      configureSettings: null,
+      adminRoles: [],
     },
   };
 
@@ -53,9 +53,9 @@ export function recoverValidServerSettings(
       );
     }
 
-    if (typeof settings.permissions?.configureSettings === "string") {
-      recoveredSettings.permissions.configureSettings =
-        settings.permissions.configureSettings;
+    if (Array.isArray(settings.permissions?.adminRoles)) {
+      recoveredSettings.permissions.adminRoles =
+        settings.permissions.adminRoles;
       logger.info(
         "Recovered valid permissions settings:",
         recoveredSettings.permissions,
@@ -94,6 +94,27 @@ export function isValidServerSettings(
     logger.warn(
       "Invalid channel ID in messageTheAdmirals settings:",
       testSettings.messageTheAdmirals.channelId,
+    );
+    return false;
+  }
+
+  if (
+    typeof testSettings.permissions !== "object" ||
+    testSettings.permissions === null
+  ) {
+    logger.warn("Invalid permissions settings:", testSettings.permissions);
+    return false;
+  }
+
+  if (
+    !Array.isArray(testSettings.permissions.adminRoles) ||
+    !testSettings.permissions.adminRoles.every(
+      (roleId) => typeof roleId === "string",
+    )
+  ) {
+    logger.warn(
+      "Invalid adminRoles in permissions settings:",
+      testSettings.permissions.adminRoles,
     );
     return false;
   }
@@ -145,9 +166,9 @@ export function updateSettingsForServer(
         currentSettings.messageTheAdmirals.channelId,
     },
     permissions: {
-      configureSettings:
-        newSettings.permissions?.configureSettings ??
-        currentSettings.permissions.configureSettings,
+      adminRoles:
+        newSettings.permissions?.adminRoles ??
+        currentSettings.permissions.adminRoles,
     },
   };
 
