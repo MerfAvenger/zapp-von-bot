@@ -15,7 +15,7 @@ FROM prepare AS build
 WORKDIR /build
 
 COPY . .
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+RUN --mount=type=cache,id=pnpm,target=/root/.local/share/pnpm/store pnpm install --frozen-lockfile
 RUN pnpm -r build
 
 RUN pnpm deploy --filter=savy-api --prod /apps/savy-api
