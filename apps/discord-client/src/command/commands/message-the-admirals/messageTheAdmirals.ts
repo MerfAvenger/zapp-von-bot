@@ -93,6 +93,7 @@ function buildResponseMessage(userReply: Message): MessageCreateOptions {
     })
     .setTimestamp(new Date());
 
+  // Some users might choose to only send attachments without any text content, but just forwarding the attachment without any context is confusing.
   if (userReply.content) {
     responseEmbed.setDescription(userReply.content);
   } else {
