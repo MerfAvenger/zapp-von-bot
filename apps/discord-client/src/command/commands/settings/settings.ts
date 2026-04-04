@@ -4,7 +4,7 @@ import {
   SlashCommandBuilder,
 } from "discord.js";
 
-import messageTheAdmirals from "./sub-commands/inbox";
+import inbox from "./sub-commands/inbox";
 import resetCommand from "./sub-commands/reset";
 import adminRoleCommand from "./sub-commands/adminRole";
 
@@ -13,13 +13,15 @@ import { InvalidCommandError } from "../../../error/errors";
 import { assertHasRequiredPermissions } from "../../utils";
 import { loadSettingsForServer } from "../../../settings/server";
 
-const subCommands = [messageTheAdmirals, resetCommand, adminRoleCommand];
+const subCommands = [inbox, resetCommand, adminRoleCommand];
 
 const data = new SlashCommandBuilder()
   .setName("settings")
-  .setDescription("Configure the bot's settings.")
-  .addSubcommand(messageTheAdmirals.data)
-  .addSubcommand(resetCommand.data);
+  .setDescription("Configure the bot's settings.");
+
+subCommands.forEach((cmd) => {
+  data.addSubcommand(cmd.data);
+});
 
 const handler = async (interaction: ChatInputCommandInteraction) => {
   const { configureSettings } = loadSettingsForServer(
