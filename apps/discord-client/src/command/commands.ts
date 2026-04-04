@@ -3,11 +3,4 @@ import messageTheAdmiralsCommand from "./commands/message-the-admirals/messageTh
 import userCommands from "./commands/users/users";
 import admin from "./commands/admin/admin";
 
-export const commandData = [
-  admin.data,
-  messageTheAdmiralsCommand.data,
-  settings.data,
-  // userCommands.data,
-];
-
-export default [settings, messageTheAdmiralsCommand, userCommands];
+export default [admin, settings, messageTheAdmiralsCommand, userCommands];
