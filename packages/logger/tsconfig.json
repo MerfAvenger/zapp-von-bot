@@ -4,8 +4,6 @@
     "lib": ["ESNext"],
     "module": "NodeNext",
     "moduleResolution": "nodenext",
-    "composite": true,
-    "incremental": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "declaration": true,
