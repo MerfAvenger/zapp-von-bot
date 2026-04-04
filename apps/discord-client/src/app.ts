@@ -47,7 +47,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
   const command = interaction.commandName;
   const isSubcommand = interaction.options.getSubcommand(false) !== null;
   const fullCommand = isSubcommand
-    ? `${command} ${interaction.options.getSubcommand(true)}`
+    ? `${command} <${interaction.options.getSubcommand(true)}>`
     : command;
   Logger.log("OnInteractionCreate", `Received command: ${fullCommand}`);
 
@@ -58,7 +58,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
     } else {
       await interaction.reply({
         content: "Unknown command.",
-        ephemeral: true,
+        flags: [MessageFlags.Ephemeral],
       });
     }
   } catch (error) {
