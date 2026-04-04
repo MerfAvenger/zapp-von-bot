@@ -1,4 +1,3 @@
-
 FROM docker.io/library/node:lts-alpine AS base
 
 
@@ -6,7 +5,7 @@ FROM base AS prepare
 
 WORKDIR /
 
-RUN corepack prepare pnpm@latest --activate
+RUN corepack prepare pnpm@9 --activate
 RUN corepack enable pnpm
 
 
@@ -16,7 +15,7 @@ FROM prepare AS build
 WORKDIR /build
 
 # Install dependencies first to leverage Docker cache.
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY packages/logger/package.json ./packages/logger/package.json
 COPY packages/model/package.json ./packages/model/package.json
 COPY apps/savy-api/package.json ./apps/savy-api/package.json
