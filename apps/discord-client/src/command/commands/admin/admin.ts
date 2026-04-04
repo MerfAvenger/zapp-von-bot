@@ -4,14 +4,14 @@ import {
   SlashCommandBuilder,
 } from "discord.js";
 
-import resetCommands from "./subcommands/reset-commands";
+import redeployCommands from "./subcommands/redeployCommands";
 
 import Logger from "logger";
 import { InvalidCommandError } from "../../../error/errors";
 import { assertHasRequiredPermissions } from "../../utils";
 import { loadSettingsForServer } from "../../../settings/server";
 
-const subCommands = [resetCommands];
+const subCommands = [redeployCommands];
 
 const data = new SlashCommandBuilder()
   .setName("admin")
