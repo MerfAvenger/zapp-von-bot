@@ -16,7 +16,10 @@ FROM prepare AS build
 WORKDIR /build
 
 # Install dependencies first to leverage Docker cache.
-COPY package.json pnpm-lock.yaml ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY packages/logger/package.json ./packages/logger/package.json
+COPY packages/model/package.json ./packages/model/package.json
+COPY apps/savy-api/package.json ./apps/savy-api/package.json
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
 COPY . .
