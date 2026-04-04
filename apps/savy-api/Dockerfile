@@ -15,9 +15,12 @@ FROM prepare AS build
 # Use the monorepo application directory.
 WORKDIR /build
 
+# Install dependencies first to leverage Docker cache.
+COPY package.json pnpm-lock.yaml ./
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+
 COPY . .
 
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 RUN pnpm -r build
 
 RUN pnpm deploy --filter=savy-api --prod /apps/savy-api
