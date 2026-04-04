@@ -14,10 +14,15 @@ FROM prepare AS build
 # Use the monorepo application directory.
 WORKDIR /build
 
-COPY . .
-RUN --mount=type=cache,id=pnpm,target=/root/.local/share/pnpm/store pnpm install --frozen-lockfile
-RUN pnpm -r --filter savy-api... build
+COPY pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY packages/ ./packages/
+COPY apps/savy-api/package.json ./apps/savy-api/package.json
 
+RUN --mount=type=cache,id=pnpm,target=/root/.local/share/pnpm/store pnpm install --frozen-lockfile
+
+COPY apps/savy-api/ ./apps/savy-api/
+
+RUN pnpm -r --filter savy-api... build
 RUN pnpm deploy --filter=savy-api --prod /apps/savy-api
 
 

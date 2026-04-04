@@ -4,7 +4,10 @@
     "declaration": true,
     "declarationDir": "types",
     "emitDeclarationOnly": true,
-    "declarationMap": true
+    "declarationMap": true,
+    "composite": true,
+    "incremental": true,
+    "tsBuildInfoFile": "./types/.tsbuildinfo"
   },
   "include": ["./index.ts"]
 }

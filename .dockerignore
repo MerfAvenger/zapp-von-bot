@@ -1,9 +1,43 @@
 # Repository tools
 .git
 .gitignore
+.github
+
+# Editor/IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
 
 # Deps
 node_modules
+**/node_modules
 
 # Build output
 dist
+**/dist
+
+# Test output
+coverage
+**/coverage
+
+# Environment files
+.env
+**/.env
+.env.*
+**/.env.*
+
+# Docker
+docker-compose*.yaml
+**/Dockerfile
+
+# Logs
+*.log
+**/logs
+
+# Runtime
+apps/discord-client/runtime

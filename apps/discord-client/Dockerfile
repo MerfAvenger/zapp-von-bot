@@ -13,10 +13,15 @@ FROM prepare AS build
 
 WORKDIR /build
 
-COPY . .
-RUN --mount=type=cache,id=pnpm,target=/root/.local/share/pnpm/store pnpm install --frozen-lockfile
-RUN pnpm RUN pnpm -r --filter discord-client... build
+COPY pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY packages/ ./packages/
+COPY apps/discord-client/package.json ./apps/discord-client/package.json
 
+RUN --mount=type=cache,id=pnpm,target=/root/.local/share/pnpm/store pnpm install --frozen-lockfile
+
+COPY apps/discord-client/ ./apps/discord-client/
+
+RUN pnpm -r --filter discord-client... build
 RUN pnpm deploy --filter=discord-client --prod /apps/discord-client
 
 
