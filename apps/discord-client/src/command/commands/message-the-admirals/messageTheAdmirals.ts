@@ -66,6 +66,39 @@ function getForwardChannelId(guildId: Snowflake): string {
   return channelId;
 }
 
+function buildResponseAttachmentsMessage(
+  userReply: Message,
+): MessageCreateOptions {
+  const filesMessage: MessageCreateOptions = {
+    files: [...userReply.attachments.values()].map((attachment) => ({
+      attachment: attachment.url,
+      name: attachment.name,
+    })),
+  };
+
+  Logger.log(
+    "MessageTheAdmiralsCommand",
+    `Forwarding ${userReply.attachments.size} attachments from user ${userReply.author.tag}'s message to leadership inbox channel.`,
+  );
+  return filesMessage;
+}
+
+function buildResponseMessage(userReply: Message): MessageCreateOptions {
+  const responseEmbed = new EmbedBuilder()
+    .setColor("#0099ff")
+    .setTitle("New message in the inbox!")
+    .setDescription(userReply.content)
+    .setAuthor({
+      name: userReply.author.tag,
+      iconURL: userReply.author.displayAvatarURL(),
+    })
+    .setTimestamp(new Date());
+
+  return {
+    embeds: [responseEmbed],
+  } as MessageCreateOptions;
+}
+
 /**
  * Send the user's response to the private message-the-admirals channel.
  *
@@ -91,40 +124,21 @@ async function forwardResponseToChannel(
     return;
   }
 
-  const responseEmbed = new EmbedBuilder()
-    .setColor("#0099ff")
-    .setTitle("New Private Message to Leadership Team")
-    .setDescription(userReply.content)
-    .setAuthor({
-      name: originalInteraction.user.tag,
-      iconURL: originalInteraction.user.displayAvatarURL(),
-    })
-    .setTimestamp(new Date());
-
-  const responseMessage: MessageCreateOptions = {
-    embeds: [responseEmbed],
-  };
-
   Logger.log(
     "MessageTheAdmiralsCommand",
     `Forwarding user ${originalInteraction.user.tag}'s message to leadership inbox channel.`,
   );
-  await leadershipInboxChannel.send(responseMessage);
+
+  if (userReply.content) {
+    await leadershipInboxChannel.send(buildResponseMessage(userReply));
+  }
 
   if (userReply.attachments.size > 0) {
     // Use a separate message for the files so that the attachments appear after the user's message.
-    const filesMessage: MessageCreateOptions = {
-      files: [...userReply.attachments.values()].map((attachment) => ({
-        attachment: attachment.url,
-        name: attachment.name,
-      })),
-    };
 
-    Logger.log(
-      "MessageTheAdmiralsCommand",
-      `Forwarding ${userReply.attachments.size} attachments from user ${originalInteraction.user.tag}'s message to leadership inbox channel.`,
+    await leadershipInboxChannel.send(
+      buildResponseAttachmentsMessage(userReply),
     );
-    await leadershipInboxChannel.send(filesMessage);
   }
 }
 
@@ -160,7 +174,9 @@ function buildInstructionsMessage(user: User): MessageCreateOptions {
   const message = `
 Hello ${user.username.toString()},
   
-Please send a message to me with your question or feedback for the leadership team. They will get back to you as soon as possible. You can still attach files if you need to. Just send them as attachments in your reply message.
+Please send a message to me with your question or feedback for the leadership team. They will get back to you as soon as possible. 
+- You can still attach files if you need to - just send them as attachments in your message.
+- Only the first message you send will be forwarded - if you need to send multiple messages, either include everything in one message or use the command again to send a second one.
 
 If you don't reply in the next 5 minutes, you'll need to start over by using the command again.
 `;
