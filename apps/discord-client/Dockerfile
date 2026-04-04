@@ -18,7 +18,8 @@ COPY pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY packages/logger/package.json ./packages/logger/package.json
 COPY packages/model/package.json ./packages/model/package.json
 COPY apps/discord-client/package.json ./apps/discord-client/package.json
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile --ignore-scripts
 
 COPY . .
 
