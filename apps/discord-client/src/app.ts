@@ -9,7 +9,7 @@ import {
 import Logger from "logger";
 import config from "./config";
 import deployCommands from "./command/deploy";
-import commands, { commandData } from "./command/commands";
+import commands from "./command/commands";
 import { buildErrorEmbed, isApplicationError } from "./error/errors";
 
 const client = new Client({
