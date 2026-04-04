@@ -45,7 +45,11 @@ client.on(Events.InteractionCreate, async (interaction) => {
     return;
 
   const command = interaction.commandName;
-  Logger.log("OnInteractionCreate", `Received command: ${command}`);
+  const isSubcommand = interaction.options.getSubcommand(false) !== null;
+  const fullCommand = isSubcommand
+    ? `${command} ${interaction.options.getSubcommand(true)}`
+    : command;
+  Logger.log("OnInteractionCreate", `Received command: ${fullCommand}`);
 
   try {
     const commandModule = commands.find((cmd) => cmd.data.name === command);
