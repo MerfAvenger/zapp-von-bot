@@ -87,12 +87,17 @@ function buildResponseMessage(userReply: Message): MessageCreateOptions {
   const responseEmbed = new EmbedBuilder()
     .setColor("#0099ff")
     .setTitle("New message in the inbox!")
-    .setDescription(userReply.content)
     .setAuthor({
       name: userReply.author.tag,
       iconURL: userReply.author.displayAvatarURL(),
     })
     .setTimestamp(new Date());
+
+  if (userReply.content) {
+    responseEmbed.setDescription(userReply.content);
+  } else {
+    responseEmbed.setDescription("*No text content in user's message.*");
+  }
 
   return {
     embeds: [responseEmbed],
@@ -129,9 +134,7 @@ async function forwardResponseToChannel(
     `Forwarding user ${originalInteraction.user.tag}'s message to leadership inbox channel.`,
   );
 
-  if (userReply.content) {
-    await leadershipInboxChannel.send(buildResponseMessage(userReply));
-  }
+  await leadershipInboxChannel.send(buildResponseMessage(userReply));
 
   if (userReply.attachments.size > 0) {
     // Use a separate message for the files so that the attachments appear after the user's message.
