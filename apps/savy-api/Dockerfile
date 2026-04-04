@@ -15,15 +15,14 @@ FROM prepare AS build
 WORKDIR /build
 
 # Install dependencies first to leverage Docker cache.
-COPY pnpm-lock.yaml pnpm-workspace.yaml ./
-COPY packages/logger/package.json ./packages/logger/package.json
-COPY packages/model/package.json ./packages/model/package.json
-COPY apps/savy-api/package.json ./apps/savy-api/package.json
+COPY pnpm-lock.yaml pnpm-workspace.yaml tsconfig*.json ./
+COPY packages/logger/package.json packages/logger/tsconfig*.json ./packages/logger/
+COPY packages/model/package.json packages/model/tsconfig*.json ./packages/model/
+COPY apps/discord-client/package.json apps/discord-client/tsconfig*.json ./apps/discord-client/
 
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile --ignore-scripts
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
 COPY . .
-
 RUN pnpm -r build
 
 RUN pnpm deploy --filter=savy-api --prod /apps/savy-api
