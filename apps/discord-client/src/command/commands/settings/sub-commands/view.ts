@@ -5,7 +5,6 @@ import {
 import Logger from "logger";
 import {
   loadSettingsForServer,
-  resetServerSettings,
   ServerSettings,
 } from "../../../../settings/server";
 import { assertHasRequiredPermissions } from "../../../utils";
