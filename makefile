@@ -8,6 +8,8 @@ help:
 	@echo "  make run          - Start services in detached mode"
 	@echo "  make run-rebuild  - Start services with rebuild in detached mode"
 	@echo "  make upgrade      - Update, rebuild and run services"
+	@echo "  make logs-api     - Follow logs for the Savy API"
+	@echo "  make logs-client  - Follow logs for the Discord Client"
 
 update:
 	git fetch && git pull
@@ -19,3 +21,9 @@ run-rebuild:
 	podman-compose -f docker-compose.yaml up -d --build --force-recreate
 
 upgrade: update run-rebuild
+
+logs-api:
+	$(CONTAINER_ENGINE) logs -f savy-api
+
+logs-client:
+	$(CONTAINER_ENGINE) logs -f discord-client
