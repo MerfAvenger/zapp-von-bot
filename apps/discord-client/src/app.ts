@@ -83,16 +83,24 @@ client.on(Events.InteractionCreate, async (interaction) => {
   }
 });
 
+async function cleanup() {
+  Logger.log("Cleanup", "Cleaning up resources before shutdown...");
+  await client.destroy();
+  Logger.log("Cleanup", "Cleanup complete. Exiting.");
+}
+
 process.on("SIGTERM", () => {
   Logger.log("SIGTERM", "Shutting down...");
-  client.destroy();
-  process.exit(0);
+  cleanup().then(() => {
+    process.exit(0);
+  });
 });
 
 process.on("SIGINT", () => {
   Logger.log("SIGINT", "Shutting down...");
-  client.destroy();
-  process.exit(0);
+  cleanup().then(() => {
+    process.exit(0);
+  });
 });
 
 client.login(config.token).catch((error) => {
