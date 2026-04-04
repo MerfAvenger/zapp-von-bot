@@ -5,7 +5,7 @@ FROM base AS prepare
 
 WORKDIR /
 
-RUN corepack prepare pnpm@9 --activate
+RUN corepack prepare pnpm@10 --activate
 RUN corepack enable pnpm
 
 
