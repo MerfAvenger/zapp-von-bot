@@ -14,15 +14,16 @@ FROM prepare AS build
 # Use the monorepo application directory.
 WORKDIR /build
 
-# Install dependencies first to leverage Docker cache.
-COPY pnpm-lock.yaml pnpm-workspace.yaml tsconfig*.json ./
-COPY packages/logger/package.json packages/logger/tsconfig*.json ./packages/logger/
-COPY packages/model/package.json packages/model/tsconfig*.json ./packages/model/
-COPY apps/discord-client/package.json apps/discord-client/tsconfig*.json ./apps/discord-client/
+COPY pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY packages/logger/package.json ./packages/logger/
+COPY packages/model/package.json ./packages/model/
+COPY apps/discord-client/package.json ./apps/discord-client/
 
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+# Install dependencies first (before context copy) to leverage Docker cache.
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile --ignore-scripts
 
 COPY . .
+RUN pnpm -r --filter './packages/**' build
 RUN pnpm -r build
 
 RUN pnpm deploy --filter=savy-api --prod /apps/savy-api
