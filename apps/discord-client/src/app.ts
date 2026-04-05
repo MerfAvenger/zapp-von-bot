@@ -37,6 +37,30 @@ client.once(Events.ClientReady, () => {
     });
 });
 
+async function handleCommandError(
+  interaction: ChatInputCommandInteraction,
+  error: unknown,
+) {
+  Logger.error("CommandHandler", "Error handling command.", error);
+  const embeds = [];
+  if (isApplicationError(error) && error.isPublic) {
+    embeds.push(buildErrorEmbed(error));
+  }
+
+  if (interaction.deferred || interaction.replied) {
+    await interaction.editReply({
+      content: "An error occurred while executing the command.",
+      embeds,
+    });
+  } else {
+    await interaction.reply({
+      content: "An error occurred while executing the command.",
+      embeds,
+      flags: [MessageFlags.Ephemeral],
+    });
+  }
+}
+
 client.on(Events.InteractionCreate, async (interaction) => {
   if (
     !interaction.isCommand() ||
@@ -62,24 +86,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
       });
     }
   } catch (error) {
-    Logger.error("CommandHandler", "Error handling command.", error);
-    const embeds = [];
-    if (isApplicationError(error) && error.isPublic) {
-      embeds.push(buildErrorEmbed(error));
-    }
-
-    if (interaction.deferred || interaction.replied) {
-      await interaction.editReply({
-        content: "An error occurred while executing the command.",
-        embeds,
-      });
-    } else {
-      await interaction.reply({
-        content: "An error occurred while executing the command.",
-        embeds,
-        flags: [MessageFlags.Ephemeral],
-      });
-    }
+    await handleCommandError(interaction, error);
   }
 });
 
