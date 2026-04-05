@@ -30,6 +30,10 @@ const handler = async (interaction: ChatInputCommandInteraction) => {
     throw new NoAdminRolesError();
   }
 
+  Logger.info(
+    "RemoveAdminRole",
+    `Building role menu with admin role IDs: ${adminRoleIds.join(", ")}`,
+  );
   const roleMenu = new RoleSelectMenuBuilder()
     .setCustomId("remove-admin-role-menu")
     .setPlaceholder("Select a role to remove admin permissions from")
