@@ -69,6 +69,7 @@ const handler = async (interaction: ChatInputCommandInteraction) => {
     "Select the roles which have admin permissions. Removing a role from this list will revoke its admin access to bot commands.",
     ROLE_MENU_ID,
     1,
+    25, // Discord's maximum - why restrict it further?
   );
 
   const cancelButton = createCancelButtonRow(CANCEL_BUTTON_ID);
