@@ -28,9 +28,31 @@ export const data = new SlashCommandSubcommandBuilder()
     "Open a role selection menu to manage roles with admin access to commands.",
   );
 
+function filterResponse(response) {
+  if (response.customId === ROLE_MENU_ID && response.isRoleSelectMenu()) {
+    return true;
+  }
+
+  if (response.customId === CANCEL_BUTTON_ID && response.isButton()) {
+    return true;
+  }
+
+  return false;
+}
+
+async function collectResponse(interaction: ChatInputCommandInteraction) {
+  return await interaction.channel
+    ?.awaitMessageComponent({
+      filter: (i) => filterResponse(i) && i.user.id === interaction.user.id,
+      time: 60000,
+    })
+    .catch(() => {
+      throw new CommandTimeoutError(interaction.user, "admin-role-management");
+    });
+}
+
 const handler = async (interaction: ChatInputCommandInteraction) => {
   const settings = loadSettingsForServer(interaction.guildId);
-
   const adminRoleIds = settings.permissions.adminRoles;
 
   if (adminRoleIds.length === 0) {
@@ -55,20 +77,11 @@ const handler = async (interaction: ChatInputCommandInteraction) => {
     components: [roleMenu, cancelButton],
   });
 
-  const response = await interaction.channel
-    ?.awaitMessageComponent({
-      filter: (i) =>
-        ((i.customId === ROLE_MENU_ID && i.isRoleSelectMenu()) ||
-          (i.customId === CANCEL_BUTTON_ID && i.isButton())) &&
-        i.user.id === interaction.user.id,
-      time: 60000,
-    })
-    .catch(() => {
-      throw new CommandTimeoutError(interaction.user, "admin-role-management");
-    });
-
+  const response = await collectResponse(interaction);
   if (!response) {
-    return;
+    throw new Error(
+      "No response collected, but no timeout error thrown. This should not happen :thinky:.",
+    );
   }
 
   if (response.customId === CANCEL_BUTTON_ID) {
