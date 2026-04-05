@@ -66,7 +66,7 @@ const handler = async (interaction: ChatInputCommandInteraction) => {
 
   const roleMenu = createRoleSelectMenuRow(
     adminRoleIds,
-    "Select the roles which have admin permissions. Removing a role from this list will revoke its admin access to bot commands.",
+    "Select roles to have admin permissions. (You can select multiple)",
     ROLE_MENU_ID,
     1,
     25, // Discord's maximum - why restrict it further?
@@ -75,6 +75,8 @@ const handler = async (interaction: ChatInputCommandInteraction) => {
   const cancelButton = createCancelButtonRow(CANCEL_BUTTON_ID);
 
   await interaction.editReply({
+    content:
+      "Select the roles which have admin permissions. Removing a role from this list will revoke its admin access to bot commands. **Click away from the menu when you are done to submit your selection.**",
     components: [roleMenu, cancelButton],
   });
 
