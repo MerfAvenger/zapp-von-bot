@@ -1,4 +1,9 @@
-import { REST, Routes, Snowflake } from "discord.js";
+import {
+  REST,
+  Routes,
+  Snowflake,
+  ApplicationCommandOptionType,
+} from "discord.js";
 import Logger from "logger";
 import config from "../config";
 import commands from "./commands";
@@ -30,15 +35,17 @@ function deployToGuild(guildId: string) {
 function buildCommandSummary() {
   return commands
     .map((cmd) => {
-      if (cmd.data.options && cmd.data.options.length > 0) {
-        const subcommands = cmd.data.options
-          .filter((opt: any) => opt.type === 1) // Type 1 is SUB_COMMAND
-          .map((opt: any) => opt.name);
-        return subcommands.length > 0
-          ? `${cmd.data.name} (${subcommands.join(", ")})`
-          : cmd.data.name;
-      }
-      return cmd.data.name;
+      const json = cmd.data.toJSON();
+      const subcommands =
+        json.options
+          ?.filter(
+            (opt) => opt.type === ApplicationCommandOptionType.Subcommand,
+          )
+          .map((opt) => opt.name) ?? [];
+
+      return subcommands.length > 0
+        ? `${json.name} (${subcommands.join(", ")})`
+        : json.name;
     })
     .join(", ");
 }
