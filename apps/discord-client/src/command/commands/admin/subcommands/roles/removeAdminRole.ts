@@ -37,7 +37,7 @@ const handler = async (interaction: ChatInputCommandInteraction) => {
   const roleMenu = new RoleSelectMenuBuilder()
     .setCustomId("remove-admin-role-menu")
     .setPlaceholder("Select a role to remove admin permissions from")
-    .addDefaultRoles(...adminRoleIds);
+    .setDefaultRoles(adminRoleIds);
 
   const roleMenuComponent =
     new ActionRowBuilder<RoleSelectMenuBuilder>().addComponents(roleMenu);
