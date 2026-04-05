@@ -5,13 +5,15 @@ import {
 } from "discord.js";
 
 import redeployCommands from "./subcommands/redeployCommands";
+import addAdminRole from "./subcommands/roles/addAdminRole";
+import removeAdminRole from "./subcommands/roles/removeAdminRole";
 
 import Logger from "logger";
 import { InvalidCommandError } from "../../../error/errors";
 import { assertHasRequiredPermissions } from "../../utils";
 import { loadSettingsForServer } from "../../../settings/server";
 
-const subCommands = [redeployCommands];
+const subCommands = [redeployCommands, addAdminRole, removeAdminRole];
 
 const data = new SlashCommandBuilder()
   .setName("admin")

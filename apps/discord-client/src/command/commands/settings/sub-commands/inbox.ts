@@ -20,17 +20,16 @@ export const data = new SlashCommandSubcommandBuilder()
 const handler = async (interaction: ChatInputCommandInteraction) => {
   const channelIdInput = interaction.options.getChannel("channel", true);
 
-  Logger.log(
-    "SettingsInboxCommand",
-    `User "${interaction.user.username}" configured the inbox channel: ${channelIdInput.name} [${channelIdInput.id}]`,
-  );
-
   updateSettingsForServer(interaction.guildId, {
     messageTheAdmirals: {
       channelId: channelIdInput.id,
     },
   });
 
+  Logger.log(
+    "SettingsInboxCommand",
+    `User "${interaction.user.username}" configured the inbox channel: ${channelIdInput.name} [${channelIdInput.id}]`,
+  );
   await interaction.editReply({
     content: `The channel for the message the admirals command has been set to <#${channelIdInput.id}>.`,
   });

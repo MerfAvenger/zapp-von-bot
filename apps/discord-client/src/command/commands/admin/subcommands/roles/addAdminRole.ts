@@ -2,15 +2,14 @@ import {
   ChatInputCommandInteraction,
   SlashCommandSubcommandBuilder,
 } from "discord.js";
-import { assertHasRequiredPermissions } from "../../../utils";
 import {
   loadSettingsForServer,
   updateSettingsForServer,
-} from "../../../../settings/server";
+} from "../../../../../settings/server";
 
 export const data = new SlashCommandSubcommandBuilder()
-  .setName("admin-role")
-  .setDescription("Configure the admin role for the bot.")
+  .setName("add-admin-role")
+  .setDescription("Add admin permissions to a role.")
   .addRoleOption((option) =>
     option
       .setName("role")
@@ -20,11 +19,6 @@ export const data = new SlashCommandSubcommandBuilder()
 
 const handler = async (interaction: ChatInputCommandInteraction) => {
   const settings = loadSettingsForServer(interaction.guildId);
-  assertHasRequiredPermissions(
-    interaction.guild,
-    interaction.user,
-    settings.permissions.adminRoles,
-  );
 
   const roleIdInput = interaction.options.getRole("role", true);
 

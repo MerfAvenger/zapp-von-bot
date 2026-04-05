@@ -6,7 +6,6 @@ import {
 
 import inbox from "./sub-commands/inbox";
 import resetCommand from "./sub-commands/reset";
-import adminRoleCommand from "./sub-commands/adminRole";
 import viewCommand from "./sub-commands/view";
 
 import Logger from "logger";
@@ -14,7 +13,7 @@ import { InvalidCommandError } from "../../../error/errors";
 import { assertHasRequiredPermissions } from "../../utils";
 import { loadSettingsForServer } from "../../../settings/server";
 
-const subCommands = [inbox, resetCommand, adminRoleCommand, viewCommand];
+const subCommands = [inbox, resetCommand, viewCommand];
 
 const data = new SlashCommandBuilder()
   .setName("settings")
@@ -31,7 +30,6 @@ const handler = async (interaction: ChatInputCommandInteraction) => {
   const subCommand = interaction.options.getSubcommand();
 
   await interaction.deferReply({ flags: MessageFlags.Ephemeral });
-  Logger.log("Settings", `Received subcommand: ${subCommand}`);
 
   const commandHandler = subCommands.find(
     (cmd) => cmd.data.name === subCommand,

@@ -102,6 +102,24 @@ export class CommandDeploymentError extends ApplicationError {
       `Failed to deploy command "${command}". Original error: ${originalError.message}`,
     );
     this.name = "CommandDeploymentError";
-    this.publicDescription = `An error occurred while deploying the command "${command}". Please contact an admin.`;
+    this.publicDescription = `An error occurred while deploying the command "${command}". Please contact the bot owner.`;
+  }
+}
+
+export class NoAdminRolesError extends ApplicationError {
+  constructor() {
+    super(`No admin roles are configured.`);
+    this.name = "NoAdminRolesError";
+    this.publicDescription = `No admin roles are configured.`;
+  }
+}
+
+export class CommandTimeoutError extends ApplicationError {
+  constructor(user: User, commandName: string) {
+    super(
+      `User "${user.username}" did not respond in time for command "${commandName}".`,
+    );
+    this.name = "CommandTimeoutError";
+    this.publicDescription = `You did not respond in time. Please try the command "${commandName}" again and respond within the time limit.`;
   }
 }
