@@ -4,12 +4,17 @@ import {
 } from "discord.js";
 import Logger from "logger";
 import { resetServerSettings } from "../../../../settings/server";
+import { GuildOnlyCommandError } from "../../../../error/errors";
 
 export const data = new SlashCommandSubcommandBuilder()
   .setName("reset")
   .setDescription("Reset the bot settings to their default values.");
 
 const handler = async (interaction: ChatInputCommandInteraction) => {
+  if (!interaction.guildId) {
+    throw new GuildOnlyCommandError(interaction.user, "reset-settings");
+  }
+
   resetServerSettings(interaction.guildId);
 
   Logger.log(

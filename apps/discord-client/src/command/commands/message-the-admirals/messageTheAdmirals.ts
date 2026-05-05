@@ -2,6 +2,7 @@ import {
   ChatInputCommandInteraction,
   DMChannel,
   EmbedBuilder,
+  Guild,
   Message,
   MessageCreateOptions,
   MessageFlags,
@@ -11,7 +12,11 @@ import {
   User,
 } from "discord.js";
 import Logger from "logger";
-import { MissingConfigurationError } from "../../../error/errors";
+import {
+  CommandTimeoutError,
+  GuildOnlyCommandError,
+  MissingConfigurationError,
+} from "../../../error/errors";
 import { loadSettingsForServer } from "../../../settings/server";
 import {
   createDirectMessageChannel,
@@ -23,6 +28,10 @@ const data = new SlashCommandBuilder()
   .setDescription("Privately send a message to the leadership team.");
 
 const handler = async (interaction: ChatInputCommandInteraction) => {
+  if (!interaction.guildId) {
+    throw new GuildOnlyCommandError(interaction.user, "message-the-admirals");
+  }
+
   const forwardChannelId = getForwardChannelId(interaction.guildId);
 
   await interaction.deferReply({ flags: [MessageFlags.Ephemeral] });
@@ -150,28 +159,39 @@ async function collectUserMessage(
   directMessage: DMChannel,
   interaction: ChatInputCommandInteraction,
 ): Promise<Message> {
-  const filter = (msg) => msg.author.id === interaction.user.id;
+  const filter = (message: Message) => {
+    return message.author.id === interaction.user.id;
+  };
 
-  let collected;
-  try {
-    collected = await directMessage.awaitMessages({
+  const collectedResponse = await directMessage
+    .awaitMessages({
       filter,
       max: 1, // Stop after 1 message
       time: 5 * 60 * 1000, // 5 minute window
       errors: ["time"], // Throw on timeout
+    })
+    .then((collected) => collected.first())
+    .catch(async (error) => {
+      await directMessage.send(
+        "The command timed out. Please use the command again if you still want to send a message.",
+      );
+      Logger.warn(
+        "MessageTheAdmiralsCommand",
+        `Received error from user ${interaction.user.tag}'s request - probably a timeout.`,
+        error,
+      );
+      return Promise.reject(
+        new CommandTimeoutError(interaction.user, "message-the-admirals"),
+      );
     });
-  } catch {
-    Logger.warn(
-      "MessageTheAdmiralsCommand",
-      "User did not respond within the time limit.",
+
+  if (!collectedResponse) {
+    throw new Error(
+      "No message collected, but no timeout error thrown. This should not happen :thinky:",
     );
-    await directMessage.send(
-      "The command timed out. Please use the command again if you still want to send a message.",
-    );
-    return;
   }
 
-  return collected.first();
+  return collectedResponse;
 }
 
 function buildInstructionsMessage(user: User): MessageCreateOptions {

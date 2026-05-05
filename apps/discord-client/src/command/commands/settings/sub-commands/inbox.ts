@@ -4,6 +4,7 @@ import {
 } from "discord.js";
 import Logger from "logger";
 import { updateSettingsForServer } from "../../../../settings/server";
+import { GuildOnlyCommandError } from "../../../../error/errors";
 
 export const data = new SlashCommandSubcommandBuilder()
   .setName("inbox")
@@ -18,6 +19,10 @@ export const data = new SlashCommandSubcommandBuilder()
   );
 
 const handler = async (interaction: ChatInputCommandInteraction) => {
+  if (!interaction.guildId) {
+    throw new GuildOnlyCommandError(interaction.user, "settings-inbox");
+  }
+
   const channelIdInput = interaction.options.getChannel("channel", true);
 
   updateSettingsForServer(interaction.guildId, {

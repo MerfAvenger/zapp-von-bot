@@ -24,6 +24,12 @@ subCommands.forEach((cmd) => {
 });
 
 const handler = async (interaction: ChatInputCommandInteraction) => {
+  if (!interaction.guild || !interaction.guildId) {
+    throw new InvalidCommandError(
+      "This command can only be used within a server.",
+    );
+  }
+
   const { adminRoles } = loadSettingsForServer(interaction.guildId).permissions;
   assertHasRequiredPermissions(interaction.guild, interaction.user, adminRoles);
 

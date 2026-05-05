@@ -39,6 +39,19 @@ export class ApplicationError extends Error {
    */
   publicDescription?: string;
 
+  originalErrorMessage?: string;
+  originalErrorName?: string;
+  originalErrorStack?: string;
+
+  constructor(message: string, originalError?: Error) {
+    super(message);
+    if (originalError) {
+      this.originalErrorMessage = originalError.message;
+      this.originalErrorName = originalError.name;
+      this.originalErrorStack = originalError.stack;
+    }
+  }
+
   get isPublic(): boolean {
     return this.publicDescription !== undefined;
   }
@@ -47,7 +60,8 @@ export class ApplicationError extends Error {
 export class FailedToCreateDMChannelError extends ApplicationError {
   constructor(user: User, originalError: Error) {
     super(
-      `Failed to create DM channel with user "${user.username}" [${user.id}]. Original error: ${originalError.message}`,
+      `Failed to create DM channel with user "${user.username}" [${user.id}].`,
+      originalError,
     );
     this.name = "FailedToCreateDMChannelError";
     this.publicDescription = `Failed to create a DM channel. Please make sure your privacy settings allow DMs from this bot.`;
@@ -57,7 +71,8 @@ export class FailedToCreateDMChannelError extends ApplicationError {
 export class FailedToSendDMError extends ApplicationError {
   constructor(user: User, originalError: Error) {
     super(
-      `Failed to send DM to user "${user.username}" [${user.id}]. Original error: ${originalError.message}`,
+      `Failed to send DM to user "${user.username}" [${user.id}].`,
+      originalError,
     );
     this.name = "FailedToSendDMError";
     this.publicDescription = `Failed to send a DM. Please make sure your privacy settings allow DMs from this bot.`;
@@ -98,9 +113,7 @@ export class PermissionDeniedError extends ApplicationError {
 
 export class CommandDeploymentError extends ApplicationError {
   constructor(command: string, originalError: Error) {
-    super(
-      `Failed to deploy command "${command}". Original error: ${originalError.message}`,
-    );
+    super(`Failed to deploy command "${command}".`, originalError);
     this.name = "CommandDeploymentError";
     this.publicDescription = `An error occurred while deploying the command "${command}". Please contact the bot owner.`;
   }
@@ -131,5 +144,20 @@ export class GuildOnlyCommandError extends ApplicationError {
     );
     this.name = "GuildOnlyCommandError";
     this.publicDescription = `You can only use the command "${commandName}" in a server channel.`;
+  }
+}
+
+export class InvalidPropertyError extends ApplicationError {
+  constructor(
+    systemName: string,
+    parent: string,
+    propertyName: string,
+    originalError?: Error,
+  ) {
+    super(
+      `Missing required property on parent object "${parent}" for command "${systemName}": <${propertyName}> - Original error: ${originalError?.message}`,
+      originalError,
+    );
+    this.name = "MissingPropertyError";
   }
 }
