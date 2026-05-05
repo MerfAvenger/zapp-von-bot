@@ -123,3 +123,13 @@ export class CommandTimeoutError extends ApplicationError {
     this.publicDescription = `You did not respond in time. Please try the command "${commandName}" again and respond within the time limit.`;
   }
 }
+
+export class GuildOnlyCommandError extends ApplicationError {
+  constructor(user: User, commandName: string) {
+    super(
+      `User "${user.username}" attempted to use guild-only command "${commandName}" in a DM.`,
+    );
+    this.name = "GuildOnlyCommandError";
+    this.publicDescription = `You can only use the command "${commandName}" in a server channel.`;
+  }
+}

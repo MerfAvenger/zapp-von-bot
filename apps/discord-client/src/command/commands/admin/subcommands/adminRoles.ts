@@ -1,6 +1,7 @@
 import {
   ActionRowBuilder,
   ButtonBuilder,
+  ButtonInteraction,
   ButtonStyle,
   ChatInputCommandInteraction,
   RoleSelectMenuBuilder,
@@ -13,6 +14,7 @@ import {
 } from "../../../../settings/server";
 import {
   CommandTimeoutError,
+  GuildOnlyCommandError,
   NoAdminRolesError,
 } from "../../../../error/errors";
 import Logger from "logger";
@@ -28,7 +30,9 @@ export const data = new SlashCommandSubcommandBuilder()
     "Open a role selection menu to manage roles with admin access to commands.",
   );
 
-function filterResponse(response) {
+function filterResponse(
+  response: RoleSelectMenuInteraction | ButtonInteraction,
+) {
   if (response.customId === ROLE_MENU_ID && response.isRoleSelectMenu()) {
     return true;
   }
@@ -43,7 +47,10 @@ function filterResponse(response) {
 async function collectResponse(interaction: ChatInputCommandInteraction) {
   return await interaction.channel
     ?.awaitMessageComponent({
-      filter: (i) => filterResponse(i) && i.user.id === interaction.user.id,
+      filter: (response) =>
+        filterResponse(
+          response as RoleSelectMenuInteraction | ButtonInteraction,
+        ) && response.user.id === interaction.user.id,
       time: 60000,
     })
     .catch(() => {
@@ -52,6 +59,10 @@ async function collectResponse(interaction: ChatInputCommandInteraction) {
 }
 
 const handler = async (interaction: ChatInputCommandInteraction) => {
+  if (!interaction.guildId) {
+    throw new GuildOnlyCommandError(interaction.user, "admin-roles");
+  }
+
   const settings = loadSettingsForServer(interaction.guildId);
   const adminRoleIds = settings.permissions.adminRoles;
 
@@ -66,7 +77,7 @@ const handler = async (interaction: ChatInputCommandInteraction) => {
 
   const roleMenu = createRoleSelectMenuRow(
     adminRoleIds,
-    "Select roles to have admin permissions. (You can select multiple)",
+    "Select roles to have admin permissions (You can select multiple).",
     ROLE_MENU_ID,
     1,
     25, // Discord's maximum - why restrict it further?
@@ -83,7 +94,7 @@ const handler = async (interaction: ChatInputCommandInteraction) => {
   const response = await collectResponse(interaction);
   if (!response) {
     throw new Error(
-      "No response collected, but no timeout error thrown. This should not happen :thinky:.",
+      "No response collected, but no timeout error thrown. This should not happen :thinky:",
     );
   }
 
