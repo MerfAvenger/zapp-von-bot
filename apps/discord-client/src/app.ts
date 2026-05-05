@@ -78,6 +78,10 @@ client.on(Events.InteractionCreate, async (interaction) => {
   try {
     const commandModule = commands.find((cmd) => cmd.data.name === command);
     if (commandModule) {
+      Logger.info(
+        "CommandHandler",
+        `Executing command handler for: ${fullCommand} [user: ${interaction.user.tag}]`,
+      );
       await commandModule.handler(interaction);
     } else {
       await interaction.reply({
