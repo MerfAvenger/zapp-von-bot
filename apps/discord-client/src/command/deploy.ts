@@ -64,7 +64,7 @@ function parseGuilds(guildIds: unknown): Snowflake[] {
     !Array.isArray(guildIds) ||
     !guildIds.every((guild) => guild && typeof guild.id === "string")
   ) {
-    throw new CommandDeploymentError("InvalidGuildData", null);
+    throw new CommandDeploymentError("InvalidGuildData");
   }
 
   return guildIds.map((guild) => guild.id);

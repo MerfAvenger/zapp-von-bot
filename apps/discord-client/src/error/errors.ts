@@ -112,7 +112,7 @@ export class PermissionDeniedError extends ApplicationError {
 }
 
 export class CommandDeploymentError extends ApplicationError {
-  constructor(command: string, originalError: Error) {
+  constructor(command: string, originalError?: Error) {
     super(`Failed to deploy command "${command}".`, originalError);
     this.name = "CommandDeploymentError";
     this.publicDescription = `An error occurred while deploying the command "${command}". Please contact the bot owner.`;
